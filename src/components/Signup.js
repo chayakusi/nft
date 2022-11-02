@@ -1,13 +1,39 @@
-import React from 'react'
-import { Col, Form , Button ,Card, FormControl, Row } from 'react-bootstrap'
+import React, { useRef, useState } from 'react'
+import { Col, Form , Button ,Card, FormControl, Row, Alert } from 'react-bootstrap'
+import { useAuth } from '../contexts/AuthContext'
+import { Link , useNavigate } from 'react-router-dom'
 
 export const Signup = (props) => {
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const { signup } = useAuth();
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate();
+
+  async function handleSubmit(e){
+    e.preventDefault();
+
+    try {
+      setError("")
+      setLoading(true)
+      await signup(emailRef.current.value, passwordRef.current.value)
+    //  navigate('/')    
+    } catch {
+      setError("Failed to create an account") 
+    }
+
+    setLoading(false)
+  }
+
   return (
     <>
     <Card>
         <Card.Body>
             <h2 className="text-center mb-4">Sign Up</h2>
-            <Form>
+        
+            {error && <Alert variant="danger">{error}</Alert>}
+            <Form onSubmit={handleSubmit}>
 
             <Row className="mb-3">
         <Form.Group as={Col} controlId="formGridFirstName">
@@ -17,18 +43,18 @@ export const Signup = (props) => {
 
         <Form.Group as={Col} controlId="formGridLastName">
           <Form.Label>Last Name</Form.Label>
-          <Form.Control type="lastname" placeholder="LastName" />
+          <Form.Control type="lastname" placeholder="Enter Last Name" />
         </Form.Group>
       </Row>
       <Row className="mb-3">
-        <Form.Group as={Col} controlId="formGridEmail">
+        <Form.Group as={Col} id ="email" controlId="formGridEmail">
           <Form.Label>Email</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" />
+          <Form.Control type="email" ref= {emailRef} placeholder="Enter email" />
         </Form.Group>
 
-        <Form.Group as={Col} controlId="formGridPassword">
+        <Form.Group as={Col} id ="password" controlId="formGridPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" />
+          <Form.Control type="password" ref= {passwordRef} placeholder="Enter password" />
         </Form.Group>
       </Row>
 
@@ -67,14 +93,14 @@ export const Signup = (props) => {
         </Form.Group>
       </Row>
 
-      <Button className='w-100' variant="primary" type="submit">
+      <Button disabled={loading} className='w-100' variant="primary" type="submit">
         Submit
       </Button>
     </Form>
         </Card.Body>
     </Card>
     <div className="w-100 text-center mt-2">
-        Already have an account? Log In
+        Already have an account? <Link to="/login">Log In</Link>
     </div>
     </>
   )
