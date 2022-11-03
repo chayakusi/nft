@@ -6,6 +6,8 @@ import { BrowserRouter as Router, Route , Routes} from "react-router-dom";
 import Landing from "./components/Landing";
 import { Login } from "./components/Login";
 import { Dashboard } from "./components/Dashboard";
+import PrivateRoute from "./components/PrivateRoute";
+
 function App() {
   return(
     
@@ -14,10 +16,9 @@ function App() {
     <Router>
     <AuthProvider>
         <Routes>
-        <Route exact path='/' element={<Landing/>} />
-        {/* <Route exact path='/dashboard' element={<Dashboard/>} /> */}
+        <PrivateRoute exact path="/" element={<Dashboard/>} />
+        {/* <Route exact path='/' element={<Landing/>} /> */}
         <Route path='/signup' element={<Signup/>} />
-        
         <Route path='/login' element={<Login/>} />
         
         </Routes>
