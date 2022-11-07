@@ -20,4 +20,29 @@ con.connect(function (err) {
   con.query(nftTable, function (err, result) {
     console.log("Table created");
   });
+
+  var nftInsert1 = "INSERT INTO nft_list VALUES ('A',1,1,1,1,1)";
+  con.query(nftInsert1, function (err, result) {
+    console.log("Record inserted");
+  });
+
+  var nftInsert2 = "INSERT INTO nft_list VALUES ('B',2,2,2,2,1)";
+  con.query(nftInsert2, function (err, result) {
+    console.log("Record inserted");
+  });
+
+  var nftInsert3 = "INSERT INTO nft_list VALUES ('C',3,3,3,3,1)";
+  con.query(nftInsert3, function (err, result) {
+    console.log("Record inserted");
+  });
+
+  var nftInsert4 = "INSERT INTO nft_list VALUES ('D',4,4,4,4,1)";
+  con.query(nftInsert4, function (err, result) {
+    console.log("Record inserted");
+  });
+
+  var nftInsert5 = "INSERT INTO nft_list VALUES ('E',5,5,5,5,1)";
+  con.query(nftInsert5, function (err, result) {
+    console.log("Record inserted");
+  });
 });

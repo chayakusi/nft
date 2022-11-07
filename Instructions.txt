@@ -1,0 +1,19 @@
+Instructions:
+
+1. In terminal, do npm i
+2. Make changes in the schema.js file.
+3. Exceute following commands in the terminal.
+   cd server
+   node schema.js
+   npm run devStart
+4. Make a new terminal window
+5. Exceute following commands in the new terminal.
+   cd client
+   npm start
+
+
+Dashboard will show the nft owned by the customer. For this, copy any of the token id from nft table to login table and see the magic!!
+
+Some pointers:
+
+1. In NFT Table: is_avl is the NFT that are available(1-> available, 0-> not available). The Buy page will only show the NFT that are available(can be bought).
