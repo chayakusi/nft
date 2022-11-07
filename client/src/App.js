@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import  Dashboard  from "./components/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import './App.css'
+import BuyNFT from "./components/BuyNFT";
 
 function App() {
   return(
@@ -20,7 +21,7 @@ function App() {
         <Route path='/signup' element={<Signup/>} />
         <Route path='/' element={<Login/>} />
         <Route path='/dashboard' element={<Dashboard/>} />
-
+        <Route path='/buynft' element={<BuyNFT/>} />
         </Routes>
     </AuthProvider>
     </Router>

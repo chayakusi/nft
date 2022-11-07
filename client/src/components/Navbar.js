@@ -1,5 +1,4 @@
 import { React, useState } from 'react';
-import { MenuItems } from './MenuItems';
 import '../css/Navbar.css';
 import { Outlet, Link } from "react-router-dom";
 import { Button } from 'react-bootstrap';
@@ -30,7 +29,9 @@ const Navbar = ()=>{
                 </i>
             </h1>
             <ul className='nav-menu'>
+              <Link to="/dashboard">
                 <li className='nav-links'>Home</li>
+                </Link>
                 <li className='nav-links'>Trade</li>
                 <li className='nav-links'>Transactions</li>
                 <li className='nav-links-btn'>

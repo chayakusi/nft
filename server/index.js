@@ -47,8 +47,19 @@ app.post("/api/insert",(req,res)=>{
     })
 })
 
+
+app.get("/nft/get", (req, res) => {
+  db.query("SELECT N.name,N.price_usd,N.price_eth FROM login L,nft_list N where L.token_id = N.token_id;", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 app.get("/nft", (req, res) => {
-    db.query("SELECT name,price_usd,price_eth FROM nft_list", (err, result) => {
+    db.query("SELECT name,token_id,price_usd,price_eth FROM nft_list where is_avl=1;", (err, result) => {
       if (err) {
         console.log(err);
       } else {
