@@ -1,0 +1,48 @@
+
+.NavbarItems {
+    height:80px;
+    display: flex;
+    justify-content: center;align-items: center;
+    font-size: 1.2rem;
+    border-radius: 20px;
+}
+.navbar-logo{
+    color:#fff;
+    justify-self: start;
+    margin-left: 20px;
+    cursor: pointer;
+}
+.fa-react{
+    margin-left: 0.5rem;
+    font-size: 1.6rem;
+}
+.nav-menu{
+    display: grid;
+    grid-template-columns: repeat(5,auto);
+    grid-gap: 10px;
+    list-style: none;
+    text-align: center;
+    width:70vw;
+    justify-content: end;
+    margin-right: 2rem;
+}
+.nav-links{
+    color:white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+}
+.nav-links:hover{
+    color:rgb(218, 212, 214);
+    
+}
+.nav-links-btn{
+    
+    text-decoration: none;
+    background-color: rgb(69, 69, 237);
+    padding: 5px;
+    border-radius: 20px;
+    
+}
+.nav-links-btn:hover{
+    background-color: rgb(51, 95, 229)
+}
