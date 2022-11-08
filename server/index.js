@@ -13,7 +13,7 @@ const db = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "tanmay",
-  database: "nft",
+  database: "mydb",
 });
 
 app.use(cors());
@@ -85,7 +85,7 @@ app.post("/nft/buy", (req, res) => {
 
 app.get("/nft/get", (req, res) => {
   db.query(
-    "SELECT N.name,N.price_usd,N.price_eth FROM nft_owned O,nft_list N, login L where O.lid = L.login_id and N.token_id = O.tid;",
+    "SELECT N.token_id, N.name,N.price_usd,N.price_eth FROM nft_owned O,nft_list N, login L where O.lid = L.login_id and N.token_id = O.tid;",
     (err, result) => {
       if (err) {
         console.log(err);
@@ -109,15 +109,19 @@ app.get("/nft", (req, res) => {
   );
 });
 
-  app.get("/nft/sell", (req, res) => {
-      db.query("SELECT N.token_id, N.name, N.price_usd, N.price_eth from login L, nft_list N, nft_owned O where L.login_id=O.login_id and O.token_id=N.token_id;", (err, result) => {
-        if (err) {
-          console.log(err);
-        } else {
-          res.send(result);
-        }
-      });
-    });  
+app.post("/nft/sell", (req, res) => {
+  const sellid = req.body.sellid;
+
+  const sqlUpdate = "UPDATE nft_list SET is_avl = 1  WHERE (token_id = ?);";
+  db.query(sqlUpdate, [sellid], (err, result) => {
+    console.log(err);
+  });
+
+  const sqlInsert = "DELETE FROM nft_owned WHERE (tid = ?)";
+  db.query(sqlInsert, [sellid], (err, result) => {
+    console.log(err);
+  });
+  });  
 
 app.listen(3001, () => {
   console.log("running");

@@ -18,14 +18,14 @@ con.connect(function (err) {
   var nftOwnedTable =
     "CREATE TABLE nft_owned (lid int NOT NULL,tid varchar(100) NOT NULL,name varchar(45) DEFAULT NULL,PRIMARY KEY (lid,tid),KEY token_idx (tid),CONSTRAINT `login` FOREIGN KEY (`lid`) REFERENCES login (login_id),CONSTRAINT token FOREIGN KEY (tid) REFERENCES nft_list (token_id));";
 
+  con.query(nftTable, function (err, result) {
+    console.log("NFT_List Table created");
+  });
 
   con.query(loginTable, function (err, result) {
     console.log("Login Table created");
   });
 
-  con.query(nftTable, function (err, result) {
-    console.log("NFT_List Table created");
-  });
   con.query(nftOwnedTable, function (err, result) {
     console.log("NFT_Owned Table created");
 
@@ -56,12 +56,12 @@ con.connect(function (err) {
     console.log("Record inserted");
   });
 
-  var nftOwnedInsert1 = "INSERT INTO nft_owned VALUES(2,1)";
+  var nftOwnedInsert1 = "INSERT INTO nft_owned VALUES(2, 1, 'A')";
   con.query(nftOwnedInsert1, function (err, result) {
     console.log("Record inserted");
   });
 
-  var nftOwnedInsert2 = "INSERT INTO nft_owned VALUES(3,1)";
+  var nftOwnedInsert2 = "INSERT INTO nft_owned VALUES(3, 1, 'A')";
   con.query(nftOwnedInsert2, function (err, result) {
     console.log("Record inserted");
   });
