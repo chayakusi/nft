@@ -20,12 +20,14 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
 app.get("/api/get", (req, res) => {
   const sqlSelect = "SELECT* FROM login;";
   db.query(sqlSelect, (err, result) => {
     res.send(result);
   });
 });
+
 
 app.post("/api/insert", (req, res) => {
   const email = req.body.email;
@@ -106,6 +108,16 @@ app.get("/nft", (req, res) => {
     }
   );
 });
+
+  app.get("/nft/sell", (req, res) => {
+      db.query("SELECT N.token_id, N.name, N.price_usd, N.price_eth from login L, nft_list N, nft_owned O where L.login_id=O.login_id and O.token_id=N.token_id;", (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send(result);
+        }
+      });
+    });  
 
 app.listen(3001, () => {
   console.log("running");
