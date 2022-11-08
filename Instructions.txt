@@ -11,9 +11,15 @@ Instructions:
    cd client
    npm start
 
+About this Project:
 
-Dashboard will show the nft owned by the customer. For this, copy any of the token id from nft table to login table and see the magic!!
+1. Dashboard will show the nft owned by the customer.
+2. Buy NFT does not have balance validation but have value validation.
+3. Once you buy with Name and TokenId, the NFT will be shown in the dashboard. That particular NFT will not be shown in the Buy NFT Page.
+4. In NFT Table: is_avl is the NFT that are available(1-> available, 0-> not available).
 
-Some pointers:
+BUGS
 
-1. In NFT Table: is_avl is the NFT that are available(1-> available, 0-> not available). The Buy page will only show the NFT that are available(can be bought).
+1. Currently we are updating the NFT_Owned table login_id(lid) column with hardcoded 1. Have to fix this to automatically store the login_id of the customer.
+
+
