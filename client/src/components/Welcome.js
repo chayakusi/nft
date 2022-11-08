@@ -81,9 +81,9 @@ export default function Welcome() {
     </div>
     <div className='d-flex justify-content-around align-items-center' style={{padding:"20px"}}>
         <Link to ="/buynft">
-        <button className='rounded bg-success' style={{padding:"10px"}} >Buy NFT</button>
-        </Link>
-        <button className='rounded bg-danger' style={{padding:"10px"}}>Sell NFT</button>
+        <button className='rounded bg-success' style={{padding:"10px"}} >Buy NFT</button></Link>
+        <Link to = "/sellnft">
+        <button className='rounded bg-danger' style={{padding:"10px"}}>Sell NFT</button></Link>
     </div>
 
     </>

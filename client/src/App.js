@@ -8,6 +8,7 @@ import  Dashboard  from "./components/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import './App.css'
 import BuyNFT from "./components/BuyNFT";
+import SellNFT from "./components/SellNFT";
 
 function App() {
   return(
@@ -22,6 +23,7 @@ function App() {
         <Route path='/' element={<Login/>} />
         <Route path='/dashboard' element={<Dashboard/>} />
         <Route path='/buynft' element={<BuyNFT/>} />
+        <Route path='/sellnft' element={<SellNFT/>} />
         </Routes>
     </AuthProvider>
     </Router>
