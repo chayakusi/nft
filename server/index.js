@@ -110,7 +110,7 @@ app.get("/nft", (req, res) => {
 });
 
   app.get("/nft/sell", (req, res) => {
-      db.query("SELECT N.token_id, N.name, N.price_usd, N.price_eth from login L, nft_list N, nft_owned O where L.login_id=O.login_id and O.token_id=N.token_id;", (err, result) => {
+      db.query("SELECT N.token_id, N.name, N.price_usd, N.price_eth from login L, nft_list N, nft_owned O where L.login_id=O.lid and O.tid=N.token_id;", (err, result) => {
         if (err) {
           console.log(err);
         } else {
