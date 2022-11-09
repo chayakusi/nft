@@ -13,13 +13,12 @@ const db = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "tanmay",
-  database: "mydb",
+  database: "nft",
 });
 
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 app.get("/api/get", (req, res) => {
   const sqlSelect = "SELECT* FROM login;";
@@ -27,7 +26,6 @@ app.get("/api/get", (req, res) => {
     res.send(result);
   });
 });
-
 
 app.post("/api/insert", (req, res) => {
   const email = req.body.email;
@@ -109,17 +107,6 @@ app.get("/nft", (req, res) => {
   );
 });
 
-<<<<<<< HEAD
-  app.get("/nft/sell", (req, res) => {
-      db.query("SELECT N.token_id, N.name, N.price_usd, N.price_eth from login L, nft_list N, nft_owned O where L.login_id=O.lid and O.tid=N.token_id;", (err, result) => {
-        if (err) {
-          console.log(err);
-        } else {
-          res.send(result);
-        }
-      });
-    });  
-=======
 app.post("/nft/sell", (req, res) => {
   const sellid = req.body.sellid;
 
@@ -132,8 +119,7 @@ app.post("/nft/sell", (req, res) => {
   db.query(sqlInsert, [sellid], (err, result) => {
     console.log(err);
   });
-  });  
->>>>>>> 087210e81e0de703ea9591d7d796649b616273f8
+});
 
 app.listen(3001, () => {
   console.log("running");

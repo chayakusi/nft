@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Axios from "axios";
 import { Form, Button } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const initialState = {
@@ -48,11 +47,10 @@ export default function SellNFT() {
         sellname: sellname,
         sellid: sellid,
         userEmail: userEmail,
-      })
-        .then(() => {
-          setState({ sellname: "", sellid: "" });
-        })
-        .catch((err) => toast.error(err.response.data));
+      }).then(() => {
+        setState({ sellname: "", sellid: "" });
+      });
+
       setTimeout(() => {
         navigate("/dashboard");
       }, 500);
@@ -95,36 +93,36 @@ export default function SellNFT() {
           </table>
         </div>
         <div className="w-100" style={{ maxWidth: "600px" }}>
-            <h2 className="text-center mb-4">Enter Name and ID to Sell:</h2>
-            <Form onSubmit={handleSell}>
-              <Form.Group className="mb-3">
-                <Form.Label className="d-flex justify-content-center align-items-center">
-                  Name
-                </Form.Label>
-                <Form.Control
-                  id="sellname"
-                  name="sellname"
-                  onChange={handleInputChange}
-                  type="name"
-                  placeholder="Enter Name"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label className="d-flex justify-content-center align-items-center">
-                  ID
-                </Form.Label>
-                <Form.Control
-                  id="sellid"
-                  name="sellid"
-                  onChange={handleInputChange}
-                  type="number"
-                  placeholder="Enter ID"
-                />
-              </Form.Group>
-              <Button className="w-100" type="submit">
-                Sell
-              </Button>
-            </Form>
+          <h2 className="text-center mb-4">Enter Name and ID to Sell:</h2>
+          <Form onSubmit={handleSell}>
+            <Form.Group className="mb-3">
+              <Form.Label className="d-flex justify-content-center align-items-center">
+                Name
+              </Form.Label>
+              <Form.Control
+                id="sellname"
+                name="sellname"
+                onChange={handleInputChange}
+                type="name"
+                placeholder="Enter Name"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="d-flex justify-content-center align-items-center">
+                ID
+              </Form.Label>
+              <Form.Control
+                id="sellid"
+                name="sellid"
+                onChange={handleInputChange}
+                type="number"
+                placeholder="Enter ID"
+              />
+            </Form.Group>
+            <Button className="w-100" type="submit">
+              Sell
+            </Button>
+          </Form>
         </div>
       </div>
     </>

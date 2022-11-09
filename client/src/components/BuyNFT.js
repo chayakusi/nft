@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Axios from "axios";
 import { Form, Button } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const initialState = {
@@ -47,11 +46,10 @@ export default function BuyNFT() {
         buyname: buyname,
         buyid: buyid,
         userEmail: userEmail,
-      })
-        .then(() => {
-          setState({ buyname: "", buyid: "" });
-        })
-        .catch((err) => toast.error(err.response.data));
+      }).then(() => {
+        setState({ buyname: "", buyid: "" });
+      });
+
       setTimeout(() => {
         navigate("/dashboard");
       }, 500);
