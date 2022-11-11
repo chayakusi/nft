@@ -19,6 +19,13 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get("/api/login", (req, res) => {
+  const sqlSelect = "SELECT * FROM login;";
+  db.query(sqlSelect, (err, result) => {
+    res.send(result);
+  });
+});
+
 app.get("/api/get", (req, res) => {
   const sqlSelect = "SELECT * FROM login where login_id=1;";
   db.query(sqlSelect, (err, result) => {
