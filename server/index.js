@@ -3,7 +3,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 const mysql = require("mysql");
-
 var ethers = require("ethers");
 var crypto = require("crypto");
 var id = crypto.randomBytes(32).toString("hex");
@@ -21,7 +20,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/api/get", (req, res) => {
-  const sqlSelect = "SELECT* FROM login;";
+  const sqlSelect = "SELECT * FROM login where login_id=1;";
   db.query(sqlSelect, (err, result) => {
     res.send(result);
   });
@@ -39,9 +38,10 @@ app.post("/api/insert", (req, res) => {
   const state = req.body.state;
   const zip = req.body.zip;
   const type = "GOLD";
+  const balance = req.body.balance;
 
   const sqlInsert =
-    "INSERT INTO login (email,password,first_name,last_name,address,phone,cell_phone,city,state,zip,type,eth_adr) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);";
+    "INSERT INTO login (email,password,first_name,last_name,address,phone,cell_phone,city,state,zip,type,eth_adr,bal_usd) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
   db.query(
     sqlInsert,
@@ -58,6 +58,7 @@ app.post("/api/insert", (req, res) => {
       zip,
       type,
       privateKey,
+      balance,
     ],
     (err, result) => {
       console.log(err);
@@ -83,7 +84,7 @@ app.post("/nft/buy", (req, res) => {
 
 app.get("/nft/get", (req, res) => {
   db.query(
-    "SELECT N.token_id, N.name,N.price_usd,N.price_eth FROM nft_owned O,nft_list N, login L where O.lid = L.login_id and N.token_id = O.tid;",
+    "SELECT N.token_id, N.name,N.price_usd,N.price_eth FROM nft_owned O, nft_list N where O.lid=2 and O.tid=N.token_id;",
     (err, result) => {
       if (err) {
         console.log(err);
