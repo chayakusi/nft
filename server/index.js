@@ -135,6 +135,12 @@ app.post("/nft/buy", async (req, res) => {
     db.query(sqlUpdate, [nft_id], (err, result) => {
       console.log(err);
     });
+
+    //Log this transaction
+    const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?);";
+    db.query(transaction, [0, 101, seller_id, nft_id, 'xxxx', new Date().toISOString().slice(0, 19).replace('T', ' '), "Buy", 0, amount], (err, result) => {
+      console.log(err);
+    });
   }
 });
 
@@ -153,7 +159,7 @@ app.get("/nft/get", (req, res) => {
 
 app.get("/nft", (req, res) => {
   db.query(
-    "SELECT name,token_id,price_usd,price_eth FROM nft_list where is_avl=1;",
+    "SELECT name,token_id,price_usd,price_eth FROM nft_list where is_avl=1 and owner_id <> 101;",
     (err, result) => {
       if (err) {
         console.log(err);
@@ -164,11 +170,27 @@ app.get("/nft", (req, res) => {
   );
 });
 
-app.post("/nft/sell", (req, res) => {
-  const sellid = req.body.sellid;
+app.post("/nft/sell", async (req, res) => {
+  const nft_id = req.body.sellid;
 
   const sqlUpdate = "UPDATE nft_list SET is_avl = 1  WHERE (token_id = ?);";
-  db.query(sqlUpdate, [sellid], (err, result) => {
+  db.query(sqlUpdate, [nft_id], (err, result) => {
+    console.log(err);
+  });
+
+  //Get the price of NFT
+  const getAmt = "SELECT price_usd from nft_list where (token_id = ?);";
+  let amount;
+  amount = await new Promise((resolve, error) => {
+    db.query(getAmt, [nft_id], (err, result) => {
+      amount = result[0].price_usd;
+      resolve(amount);
+    });
+  });
+
+  //Log this transaction
+  const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?);";
+  db.query(transaction, [0, 100, 101, nft_id, 'xxxx', new Date().toISOString().slice(0, 19).replace('T', ' '), "Posted", 0, amount], (err, result) => {
     console.log(err);
   });
 });
