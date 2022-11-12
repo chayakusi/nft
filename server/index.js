@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
-const mysql = require("mysql2");
+const mysql = require("mysql");
 
 var ethers = require("ethers");
 var crypto = require("crypto");
@@ -13,7 +13,7 @@ var privateKey = "0x" + id;
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "Chaya@sql123",
+  password: "tanmay",
   database: "mydb",
 });
 
@@ -81,13 +81,13 @@ app.post("/nft/buy", async (req, res) => {
   // Get the balance of buyer
   const getBal = "SELECT bal_usd from login WHERE login_id = 101;";
   let balance;
-  balance = await new Promise((resolve,error) => {
+  balance = await new Promise((resolve, error) => {
     db.query(getBal, (err, result) => {
       balance = result[0].bal_usd;
       resolve(balance);
-      });
-  })
-  
+    });
+  });
+
   //Get the price of NFT
   const getAmt = "SELECT price_usd from nft_list where (token_id = ?);";
   let amount;
@@ -95,15 +95,16 @@ app.post("/nft/buy", async (req, res) => {
     db.query(getAmt, [nft_id], (err, result) => {
       amount = result[0].price_usd;
       resolve(amount);
-    })
-  })
- 
-  if(balance >= amount) {
+    });
+  });
+
+  if (balance >= amount) {
     //Update the balance of Buyer
-    const updateBal = "UPDATE login SET bal_usd = bal_usd - ? WHERE login_id = 101;";
+    const updateBal =
+      "UPDATE login SET bal_usd = bal_usd - ? WHERE login_id = 101;";
     db.query(updateBal, [amount], (err, result) => {
       console.log(err);
-    })
+    });
 
     //Get the Seller ID
     const sellerId = "SELECT owner_id from nft_list where (token_id = ?);";
@@ -112,20 +113,22 @@ app.post("/nft/buy", async (req, res) => {
       db.query(sellerId, [nft_id], (err, result) => {
         seller_id = result[0].owner_id;
         resolve(seller_id);
-      })
-    })
-    
+      });
+    });
+
     //Update the balance of Seller
-    const updateSellBal = "UPDATE login SET bal_usd = bal_usd + ? WHERE login_id = ?;";
+    const updateSellBal =
+      "UPDATE login SET bal_usd = bal_usd + ? WHERE login_id = ?;";
     db.query(updateSellBal, [amount, seller_id], (err, result) => {
       console.log(err);
-    })
+    });
 
     //Update the owner of NFT
-    const updateOwner = "UPDATE nft_list SET owner_id = 101 WHERE (token_id = ?);";
+    const updateOwner =
+      "UPDATE nft_list SET owner_id = 101 WHERE (token_id = ?);";
     db.query(updateOwner, [nft_id], (err, result) => {
       console.log(err);
-    })
+    });
 
     //Make the NF available to buy
     const sqlUpdate = "UPDATE nft_list SET is_avl = 0  WHERE (token_id = ?);";
@@ -133,7 +136,6 @@ app.post("/nft/buy", async (req, res) => {
       console.log(err);
     });
   }
-
 });
 
 app.get("/nft/get", (req, res) => {
@@ -169,7 +171,6 @@ app.post("/nft/sell", (req, res) => {
   db.query(sqlUpdate, [sellid], (err, result) => {
     console.log(err);
   });
-
 });
 
 app.listen(3001, () => {

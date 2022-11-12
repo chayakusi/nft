@@ -1,9 +1,9 @@
-var mysql = require("mysql2");
+var mysql = require("mysql");
 
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Chaya@sql123",
+  password: "tanmay",
   database: "mydb",
 });
 
@@ -16,7 +16,7 @@ con.connect(function (err) {
     "CREATE TABLE nft_list (name varchar(45) DEFAULT NULL,token_id varchar(100) NOT NULL, owner_id int DEFAULT 0, nft_ethadr varchar(100) NOT NULL,price_usd int DEFAULT NULL,price_eth int DEFAULT NULL,is_avl int NOT NULL,PRIMARY KEY (token_id),CONSTRAINT owner FOREIGN KEY (owner_id) REFERENCES login (login_id));";
   var transTable =
     "CREATE TABLE trans (trans_id int NOT NULL AUTO_INCREMENT,buyer_id int DEFAULT NULL,seller_id int DEFAULT NULL,token_id varchar(100) DEFAULT NULL,nft_addr varchar(100) NOT NULL,date date DEFAULT NULL,com_type varchar(45) DEFAULT NULL,com_paid int DEFAULT NULL,value int DEFAULT NULL,PRIMARY KEY (trans_id),KEY buyer_idx (buyer_id),KEY seller_idx (seller_id),KEY nfttoken_idx (token_id),CONSTRAINT buyer FOREIGN KEY (buyer_id) REFERENCES login (login_id),CONSTRAINT nfttoken FOREIGN KEY (token_id) REFERENCES nft_list (token_id),CONSTRAINT seller FOREIGN KEY (seller_id) REFERENCES login (login_id));";
-  
+
   con.query(loginTable, function (err, result) {
     console.log("Login Table created");
   });
@@ -25,10 +25,13 @@ con.connect(function (err) {
     console.log("NFT_List Table created");
   });
 
-  var loginInsert1 = "INSERT INTO login VALUES (100,'admin@email.com','admin@123','Admin','','1234 Main St','9876543210','','Dallas','Texas','75252','GOLD','xxxx',NULL,NULL);";
+  var loginInsert1 =
+    "INSERT INTO login VALUES (100,'admin@email.com','admin@123','Admin','','1234 Main St','9876543210','','Dallas','Texas','75252','GOLD','xxxx',NULL,NULL);";
+
   con.query(loginInsert1, function (err, result) {
     console.log("Record inserted");
-    
+  });
+
   con.query(transTable, function (err, result) {
     console.log("Trans Table created");
   });
