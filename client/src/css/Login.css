@@ -1,13 +1,13 @@
-.man_login{
-    background-image: url("../photos/manlogin.jpg");
-    background-size: cover;
+.login{
+    background-image: url("../photos/login.jpg");
+    background-size:cover;
     background-repeat: no-repeat;
 }
-.manlogin_card{
+.login_card{
     box-shadow: -3px -3px 9px #aaa9a9a2,
               3px 3px 7px rgba(147, 149, 151, 0.671);
 }
-.manlogin_card .login_button{
+.login_card .login_button{
     color: rgb(9, 7, 7);
      font-size: 20px;
   font-weight: 500;
@@ -16,16 +16,16 @@
 
 
 }
-.manlogin_card .login_button:hover{
+.login_card .login_button:hover{
     color: rgb(9, 7, 7);
   border: 2px solid rgba(9, 9, 1, 0.438);
   background: rgba(14, 31, 186, 0);
 }
-.manlogin_card .login_input:active{
+.login_card .login_input:active{
     border: 2px solid rgba(9, 9, 1, 0.438);
 
 }
-.manlogin_card .login_input:hover{
+.login_card .login_input:hover{
     border: 2px solid rgba(9, 9, 1, 0.438);
 
 }

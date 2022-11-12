@@ -60,14 +60,18 @@ export default function Manlogin() {
         >
           <div className="w-100" style={{ maxWidth: "600px" }}>
             <Card
+              className="manlogin_card"
               style={{
                 backgroundColor: "transparent",
                 color: "white",
-                borderStyle: "none",
+                borderRadius: "20px",
+                padding: "40px",
               }}
             >
               <Card.Body>
-                <h2 className="text-center mb-4">Welcome, Manager</h2>
+                <h2 style={{ marginBottom: "30px" }} className="text-center">
+                  Welcome, Manager
+                </h2>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Form onSubmit={handleLogin}>
                   <Form.Group
@@ -75,8 +79,22 @@ export default function Manlogin() {
                     className="mb-3 "
                     controlId="formGridEmail"
                   >
-                    <Form.Label>Email Address</Form.Label>
+                    <Form.Label
+                      style={{
+                        padding: "5px",
+                        fontWeight: "bold",
+                        fontSize: "20px",
+                      }}
+                      className="d-flex justify-content-center align-items-center"
+                    >
+                      Email Address
+                    </Form.Label>
                     <Form.Control
+                      className="login_input"
+                      style={{
+                        borderRadius: "50px",
+                        height: "50px",
+                      }}
                       type="email"
                       ref={emailRef}
                       placeholder="Enter Email Address"
@@ -88,8 +106,22 @@ export default function Manlogin() {
                     className="mb-3"
                     controlId="formGridPassword"
                   >
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label
+                      style={{
+                        padding: "5px",
+                        fontWeight: "bold",
+                        fontSize: "20px",
+                      }}
+                      className="d-flex justify-content-center align-items-center"
+                    >
+                      Password
+                    </Form.Label>
                     <Form.Control
+                      className="login_input"
+                      style={{
+                        borderRadius: "50px",
+                        height: "50px",
+                      }}
                       type="password"
                       ref={passwordRef}
                       placeholder="Enter Password"
@@ -97,8 +129,22 @@ export default function Manlogin() {
                   </Form.Group>
 
                   <Form.Group id="mancodeRef" className="mb-3">
-                    <Form.Label>Manager Code</Form.Label>
+                    <Form.Label
+                      style={{
+                        padding: "5px",
+                        fontWeight: "bold",
+                        fontSize: "20px",
+                      }}
+                      className="d-flex justify-content-center align-items-center"
+                    >
+                      Manager Code
+                    </Form.Label>
                     <Form.Control
+                      className="login_input"
+                      style={{
+                        borderRadius: "50px",
+                        height: "50px",
+                      }}
                       type="number"
                       ref={mancodeRef}
                       placeholder="Enter your Manager Code"
@@ -106,12 +152,16 @@ export default function Manlogin() {
                   </Form.Group>
                   <div className="d-flex justify-content-center align-items-center">
                     <Button
+                      className="login_button"
                       style={{
+                        borderRadius: "50px",
+                        height: "50px",
+
+                        width: "50%",
                         marginTop: "20px",
                         backgroundColor: "rgb(82, 95, 241)",
                       }}
                       disabled={loading}
-                      className="w-50"
                       variant="primary"
                       type="submit"
                     >
