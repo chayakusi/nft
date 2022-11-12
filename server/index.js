@@ -138,9 +138,23 @@ app.post("/nft/buy", async (req, res) => {
 
     //Log this transaction
     const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?);";
-    db.query(transaction, [0, 101, seller_id, nft_id, 'xxxx', new Date().toISOString().slice(0, 19).replace('T', ' '), "Buy", 0, amount], (err, result) => {
-      console.log(err);
-    });
+    db.query(
+      transaction,
+      [
+        0,
+        101,
+        seller_id,
+        nft_id,
+        "xxxx",
+        new Date().toISOString().slice(0, 19).replace("T", " "),
+        "Buy",
+        0,
+        amount,
+      ],
+      (err, result) => {
+        console.log(err);
+      }
+    );
   }
 });
 
@@ -168,6 +182,16 @@ app.get("/trans", (req, res) => {
       }
     }
   );
+});
+
+app.get("/man/trans", (req, res) => {
+  db.query("SELECT * FROM trans;", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
 });
 
 app.get("/nft", (req, res) => {
@@ -203,9 +227,23 @@ app.post("/nft/sell", async (req, res) => {
 
   //Log this transaction
   const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?);";
-  db.query(transaction, [0, 100, 101, nft_id, 'xxxx', new Date().toISOString().slice(0, 19).replace('T', ' '), "Posted", 0, amount], (err, result) => {
-    console.log(err);
-  });
+  db.query(
+    transaction,
+    [
+      0,
+      100,
+      101,
+      nft_id,
+      "xxxx",
+      new Date().toISOString().slice(0, 19).replace("T", " "),
+      "Posted",
+      0,
+      amount,
+    ],
+    (err, result) => {
+      console.log(err);
+    }
+  );
 });
 
 app.listen(3001, () => {

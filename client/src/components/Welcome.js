@@ -16,15 +16,28 @@ export default function Welcome() {
   const { currentUser } = useAuth();
   const [NFTdata, setNFTData] = useState([]);
   const [userLogin, setUserLogin] = useState([]);
+  const [loginData, setLoginData] = useState([]);
+  const [username, setUserName] = useState("");
   const loadNFT = async () => {
     const response = await axios.get("http://localhost:3001/nft/get");
     setNFTData(response.data);
+  };
+  const loadLogin = async () => {
+    const response = await axios.get("http://localhost:3001/api/login");
+    setLoginData(response.data);
+
+    loginData.forEach((item, index) => {
+      if (item.email === currentUser.email) setUserName(item.first_name);
+    });
   };
 
   const loadBalance = async () => {
     const response = await axios.get("http://localhost:3001/api/get");
     setUserLogin(response.data);
   };
+  useEffect(() => {
+    loadLogin();
+  });
 
   useEffect(() => {
     loadNFT();
@@ -42,7 +55,7 @@ export default function Welcome() {
       >
         <div className="d-flex">
           <h1>Welcome,&nbsp;</h1>
-          <h1> Tanmay&nbsp;</h1>
+          <h1>{username}&nbsp;</h1>
         </div>
         <div className="p-4 bg-warning rounded-circle"></div>
       </div>

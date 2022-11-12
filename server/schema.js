@@ -11,7 +11,7 @@ con.connect(function (err) {
   if (err) throw err;
   console.log("Connected!");
   var loginTable =
-    "CREATE TABLE login (login_id int NOT NULL AUTO_INCREMENT,email varchar(45) NOT NULL,password varchar(45) NOT NULL,first_name varchar(45) NOT NULL,last_name varchar(45) DEFAULT NULL,address varchar(100) NOT NULL,phone varchar(45) NOT NULL,cell_phone varchar(45) DEFAULT NULL,city varchar(45) NOT NULL,state varchar(45) NOT NULL,zip int NOT NULL,type varchar(45) NOT NULL,eth_adr varchar(100) NOT NULL,bal_usd int DEFAULT NULL,bal_eth int DEFAULT NULL,PRIMARY KEY (login_id),UNIQUE KEY phone_UNIQUE (phone));";
+    "CREATE TABLE login (login_id int NOT NULL AUTO_INCREMENT,email varchar(45) NOT NULL,password varchar(45) NOT NULL,first_name varchar(45) NOT NULL,last_name varchar(45) DEFAULT NULL,address varchar(100) NOT NULL,phone varchar(45) NOT NULL,cell_phone varchar(45) DEFAULT NULL,city varchar(45) NOT NULL,state varchar(45) NOT NULL,zip int NOT NULL,type varchar(45) NOT NULL,eth_adr varchar(100) NOT NULL,bal_usd int DEFAULT NULL,bal_eth int DEFAULT NULL,mancode int DEFAULT NULL,PRIMARY KEY (login_id),UNIQUE KEY phone_UNIQUE (phone));";
   var nftTable =
     "CREATE TABLE nft_list (name varchar(45) DEFAULT NULL,token_id varchar(100) NOT NULL, owner_id int DEFAULT 0, nft_ethadr varchar(100) NOT NULL,price_usd int DEFAULT NULL,price_eth int DEFAULT NULL,is_avl int NOT NULL,PRIMARY KEY (token_id),CONSTRAINT owner FOREIGN KEY (owner_id) REFERENCES login (login_id));";
   var transTable =
@@ -26,7 +26,7 @@ con.connect(function (err) {
   });
 
   var loginInsert1 =
-    "INSERT INTO login VALUES (100,'admin@email.com','admin@123','Admin','','1234 Main St','9876543210','','Dallas','Texas','75252','GOLD','xxxx',NULL,NULL);";
+    "INSERT INTO login VALUES (100,'admin@email.com','admin@123','Admin','','1234 Main St','9876543210','','Dallas','Texas','75252','GOLD','xxxx',NULL,NULL,1);";
 
   con.query(loginInsert1, function (err, result) {
     console.log("Record inserted");

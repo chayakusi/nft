@@ -1,35 +1,58 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Form, Button, Card, FormControl, Alert } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import "../css/Manlogin.css";
+import axios from "axios";
 
-export default function Login() {
+export default function Manlogin() {
   const emailRef = useRef();
   const passwordRef = useRef();
+  const mancodeRef = useRef();
   const { login } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  //   async function handleSubmit(e) {
-  //     e.preventDefault();
+  const [loginData, setLoginData] = useState([]);
+  const loadLogin = async () => {
+    const response = await axios.get("http://localhost:3001/api/login");
+    setLoginData(response.data);
+  };
 
-  //     try {
-  //       setError("");
-  //       setLoading(true);
-  //       await login(emailRef.current.value, passwordRef.current.value);
-  //       navigate("/dashboard");
-  //     } catch {
-  //       setError("Failed to log in");
-  //     }
+  useEffect(() => {
+    loadLogin();
+  }, []);
 
-  //     setLoading(false);
-  //   }
+  async function handleLogin(e) {
+    e.preventDefault();
+    let valid = false;
+    loginData.forEach((item, index) => {
+      if (
+        item.email === emailRef.current.value &&
+        item.mancode == mancodeRef.current.value
+      )
+        valid = true;
+    });
+    if (!valid) {
+      alert("Not a manager");
+    } else {
+      try {
+        setError("");
+        setLoading(true);
+        await login(emailRef.current.value, passwordRef.current.value);
+        navigate("/manpage");
+      } catch {
+        setError("Failed to log in");
+      }
+
+      setLoading(false);
+    }
+  }
 
   return (
-    <>
+    <div className="man_login">
       <div style={{ marginRight: "800px" }}>
         <Container
           className="d-flex align-items-center justify-content-center"
@@ -46,10 +69,10 @@ export default function Login() {
               <Card.Body>
                 <h2 className="text-center mb-4">Welcome, Manager</h2>
                 {error && <Alert variant="danger">{error}</Alert>}
-                <Form>
+                <Form onSubmit={handleLogin}>
                   <Form.Group
                     id="emailRef"
-                    className="mb-3"
+                    className="mb-3 "
                     controlId="formGridEmail"
                   >
                     <Form.Label>Email Address</Form.Label>
@@ -72,6 +95,15 @@ export default function Login() {
                       placeholder="Enter Password"
                     />
                   </Form.Group>
+
+                  <Form.Group id="mancodeRef" className="mb-3">
+                    <Form.Label>Manager Code</Form.Label>
+                    <Form.Control
+                      type="number"
+                      ref={mancodeRef}
+                      placeholder="Enter your Manager Code"
+                    />
+                  </Form.Group>
                   <div className="d-flex justify-content-center align-items-center">
                     <Button
                       style={{
@@ -90,7 +122,7 @@ export default function Login() {
               </Card.Body>
             </Card>
             <div
-              style={{ color: "black", marginTop: "10px" }}
+              style={{ color: "white", marginTop: "10px" }}
               className="d-flex justify-content-center align-items-center"
             >
               Trader? &nbsp;<Link to="/">Login</Link>
@@ -98,6 +130,6 @@ export default function Login() {
           </div>
         </Container>
       </div>
-    </>
+    </div>
   );
 }
