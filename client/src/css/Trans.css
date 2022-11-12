@@ -1,0 +1,28 @@
+.trans-table{
+    border-collapse: collapse;
+    margin:auto;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    width: 1200px;
+    max-width: 1200px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
+}
+
+.trans-table thead tr{
+    background-color: #061589de;
+    color: #fff;
+    text-align: left;
+}
+.trans-table th,
+.trans-table td{
+    padding:12px 15px;
+}
+.trans-table tbody tr{
+    border-bottom: 1px solid #ddd;
+}
+
+.trans-table tbody tr:nth-of-type(even){
+    background-color: #f3f3f3;
+}
+
+
