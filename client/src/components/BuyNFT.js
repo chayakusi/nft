@@ -7,13 +7,13 @@ import { useAuth } from "../contexts/AuthContext";
 import "react-toastify/dist/ReactToastify.css";
 
 const initialState = {
-  buyname: "",
-  buyid: "",
+  nft_name: "",
+  nft_id: "",
 };
 
 export default function BuyNFT() {
   const [state, setState] = useState(initialState);
-  const { buyname, buyid } = state;
+  const { nft_name, nft_id } = state;
   const [NFTdata, setNFTData] = useState([]);
   const { currentUser } = useAuth();
   const userEmail = currentUser.email;
@@ -37,17 +37,17 @@ export default function BuyNFT() {
     e.preventDefault();
     let valid = false;
     NFTdata.forEach((item, index) => {
-      if (item.name === buyname && item.token_id === buyid) valid = true;
+      if (item.name === nft_name && item.token_id === nft_id) valid = true;
     });
-    if (!buyname || !buyid || !valid) {
+    if (!nft_name || !nft_id || !valid) {
       alert("Check your values");
     } else {
       Axios.post("http://localhost:3001/nft/buy", {
-        buyname: buyname,
-        buyid: buyid,
+        nft_name: nft_name,
+        nft_id: nft_id,
         userEmail: userEmail,
       }).then(() => {
-        setState({ buyname: "", buyid: "" });
+        setState({ nft_name: "", nft_id: "" });
       });
 
       setTimeout(() => {
@@ -99,8 +99,8 @@ export default function BuyNFT() {
                 Name
               </Form.Label>
               <Form.Control
-                id="buyname"
-                name="buyname"
+                id="nft_name"
+                name="nft_name"
                 onChange={handleInputChange}
                 type="name"
                 placeholder="Enter Name"
@@ -111,8 +111,8 @@ export default function BuyNFT() {
                 ID
               </Form.Label>
               <Form.Control
-                id="buyid"
-                name="buyid"
+                id="nft_id"
+                name="nft_id"
                 onChange={handleInputChange}
                 type="number"
                 placeholder="Enter ID"
