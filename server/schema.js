@@ -28,6 +28,7 @@ con.connect(function (err) {
   var loginInsert1 = "INSERT INTO login VALUES (100,'admin@email.com','admin@123','Admin','','1234 Main St','9876543210','','Dallas','Texas','75252','GOLD','xxxx',NULL,NULL);";
   con.query(loginInsert1, function (err, result) {
     console.log("Record inserted");
+  });
     
   con.query(transTable, function (err, result) {
     console.log("Trans Table created");
