@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
-import Axios from "axios";
+import axios from "axios";
 import { Form, Button } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import "../css/Trans.css";
 
 export default function Trans() {
+  const [transData, setTransData] = useState([]);
+  const loadTrans = async () => {
+    const response = await axios.get("http://localhost:3001/trans");
+    setTransData(response.data);
+  };
+
+  useEffect(() => {
+    loadTrans();
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -32,16 +42,20 @@ export default function Trans() {
               </tr>
             </thead>
             <tbody>
-              {/* {NFTdata.map((item, index) => {
+              {transData.map((item, index) => {
                 return (
                   <tr>
-                    <td>{item.name}</td>
+                    <td>{item.buyer_id}</td>
+                    <td>{item.seller_id}</td>
                     <td>{item.token_id}</td>
-                    <td>{item.price_usd}</td>
-                    <td>{item.price_eth}</td>
+                    <td>{item.nft_addr}</td>
+                    <td>{item.date}</td>
+                    <td>{item.com_type}</td>
+                    <td>{item.com_paid}</td>
+                    <td>{item.value}</td>
                   </tr>
                 );
-              })} */}
+              })}
             </tbody>
           </table>
         </div>

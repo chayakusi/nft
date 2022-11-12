@@ -155,6 +155,19 @@ app.get("/nft/get", (req, res) => {
   );
 });
 
+app.get("/trans", (req, res) => {
+  db.query(
+    "SELECT * FROM trans where buyer_id = 101 OR seller_id = 101;",
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
 app.get("/nft", (req, res) => {
   db.query(
     "SELECT name,token_id,price_usd,price_eth FROM nft_list where is_avl=1 and owner_id <> 101;",
