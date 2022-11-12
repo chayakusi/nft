@@ -19,6 +19,7 @@ export default function Signup() {
   const { signup } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [logindetails, setLoginDetails] = useState([]);
   const navigate = useNavigate();
 
   //server
@@ -34,16 +35,23 @@ export default function Signup() {
   const [zip, setZip] = useState();
   const [balance, setBalance] = useState();
 
-  // const submitDetails = ()=>{
-  //   Axios.post('http://localhost:3001/api/insert',{email:email,password:password,firstname:firstname,lastname:lastname,address:address,phone:phone,cphone:cphone,city:city,state:state,zip:zip}).then(()=>{
-  //     alert("successful inserted")
-  //   })
-  // }
+  const loadLogin = async () => {
+    const response = await Axios.get("http://localhost:3001/api/login");
+    setLoginDetails(response.data);
+  };
+
+  useEffect(() => {
+    loadLogin();
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
-
+    let valid = false;
+    logindetails.forEach((item, index) => {
+      if (item.phone === phone) valid = true;
+    });
     try {
+      if (valid === true) throw error;
       setError("");
       setLoading(true);
       await signup(emailRef.current.value, passwordRef.current.value);

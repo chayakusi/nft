@@ -35,7 +35,9 @@ const Navbar = () => {
         <Link to="/sellnft" style={{ textDecoration: "none" }}>
           <li className="nav-links">Sell</li>
         </Link>
-        <li className="nav-links">Transactions</li>
+        <Link to="/trans" style={{ textDecoration: "none" }}>
+          <li className="nav-links">Transactions</li>
+        </Link>
         <li className="nav-links-btn">
           <Button
             style={{ color: "white", textDecoration: "none" }}
