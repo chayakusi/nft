@@ -20,7 +20,9 @@ export default function SellNFT() {
   const navigate = useNavigate();
 
   const loadNFT = async () => {
-    const response = await Axios.get("http://localhost:3001/nft/get");
+    const response = await Axios.post("http://localhost:3001/nft/get", {
+      userEmail: userEmail,
+    });
     setNFTData(response.data);
   };
 

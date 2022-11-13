@@ -8,14 +8,18 @@ import "../css/Trans.css";
 
 export default function Trans() {
   const [transData, setTransData] = useState([]);
+  const { currentUser } = useAuth();
+  const userEmail = currentUser.email;
   const loadTrans = async () => {
-    const response = await axios.get("http://localhost:3001/trans");
+    const response = await axios.post("http://localhost:3001/trans", {
+      userEmail: userEmail,
+    });
     setTransData(response.data);
   };
 
   useEffect(() => {
     loadTrans();
-  }, []);
+  });
 
   return (
     <>

@@ -28,9 +28,21 @@ app.get("/api/login", (req, res) => {
   });
 });
 
-app.get("/api/get", (req, res) => {
-  const sqlSelect = "SELECT * FROM login where login_id=101;";
-  db.query(sqlSelect, (err, result) => {
+app.post("/api/get", async (req, res) => {
+  const userEmail = req.body.userEmail;
+
+  // Get the id of buyer
+  const getLoginID = "SELECT login_id from login WHERE email = ?;";
+  let login_id;
+  login_id = await new Promise((resolve, error) => {
+    db.query(getLoginID, [userEmail], (err, result) => {
+      login_id = result[0].login_id;
+      resolve(login_id);
+    });
+  });
+
+  const sqlSelect = "SELECT * FROM login where login_id=?;";
+  db.query(sqlSelect, [login_id], (err, result) => {
     res.send(result);
   });
 });
@@ -77,12 +89,23 @@ app.post("/api/insert", (req, res) => {
 
 app.post("/nft/buy", async (req, res) => {
   const nft_id = req.body.nft_id;
+  const userEmail = req.body.userEmail;
+
+  // Get the id of buyer
+  const getLoginID = "SELECT login_id from login WHERE email = ?;";
+  let login_id;
+  login_id = await new Promise((resolve, error) => {
+    db.query(getLoginID, [userEmail], (err, result) => {
+      login_id = result[0].login_id;
+      resolve(login_id);
+    });
+  });
 
   // Get the balance of buyer
-  const getBal = "SELECT bal_usd from login WHERE login_id = 101;";
+  const getBal = "SELECT bal_usd from login WHERE login_id = ?;";
   let balance;
   balance = await new Promise((resolve, error) => {
-    db.query(getBal, (err, result) => {
+    db.query(getBal, [login_id], (err, result) => {
       balance = result[0].bal_usd;
       resolve(balance);
     });
@@ -101,8 +124,8 @@ app.post("/nft/buy", async (req, res) => {
   if (balance >= amount) {
     //Update the balance of Buyer
     const updateBal =
-      "UPDATE login SET bal_usd = bal_usd - ? WHERE login_id = 101;";
-    db.query(updateBal, [amount], (err, result) => {
+      "UPDATE login SET bal_usd = bal_usd - ? WHERE login_id = ?;";
+    db.query(updateBal, [amount, login_id], (err, result) => {
       console.log(err);
     });
 
@@ -125,8 +148,8 @@ app.post("/nft/buy", async (req, res) => {
 
     //Update the owner of NFT
     const updateOwner =
-      "UPDATE nft_list SET owner_id = 101 WHERE (token_id = ?);";
-    db.query(updateOwner, [nft_id], (err, result) => {
+      "UPDATE nft_list SET owner_id = ? WHERE (token_id = ?);";
+    db.query(updateOwner, [login_id, nft_id], (err, result) => {
       console.log(err);
     });
 
@@ -142,7 +165,7 @@ app.post("/nft/buy", async (req, res) => {
       transaction,
       [
         0,
-        101,
+        login_id,
         seller_id,
         nft_id,
         "xxxx",
@@ -158,9 +181,22 @@ app.post("/nft/buy", async (req, res) => {
   }
 });
 
-app.get("/nft/get", (req, res) => {
+app.post("/nft/get", async (req, res) => {
+  const userEmail = req.body.userEmail;
+
+  // Get the id of buyer
+  const getLoginID = "SELECT login_id from login WHERE email = ?;";
+  let login_id;
+  login_id = await new Promise((resolve, error) => {
+    db.query(getLoginID, [userEmail], (err, result) => {
+      login_id = result[0].login_id;
+      resolve(login_id);
+    });
+  });
+
   db.query(
-    "SELECT token_id,name,price_usd,price_eth FROM nft_list where owner_id=101;",
+    "SELECT token_id,name,price_usd,price_eth FROM nft_list where owner_id=?;",
+    [login_id],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -171,9 +207,22 @@ app.get("/nft/get", (req, res) => {
   );
 });
 
-app.get("/trans", (req, res) => {
+app.post("/trans", async (req, res) => {
+  const userEmail = req.body.userEmail;
+
+  // Get the id of buyer
+  const getLoginID = "SELECT login_id from login WHERE email = ?;";
+  let login_id;
+  login_id = await new Promise((resolve, error) => {
+    db.query(getLoginID, [userEmail], (err, result) => {
+      login_id = result[0].login_id;
+      resolve(login_id);
+    });
+  });
+
   db.query(
-    "SELECT * FROM trans where buyer_id = 101 OR seller_id = 101;",
+    "SELECT * FROM trans where buyer_id = ? OR seller_id = ?;",
+    [login_id, login_id],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -194,9 +243,22 @@ app.get("/man/trans", (req, res) => {
   });
 });
 
-app.get("/nft", (req, res) => {
+app.post("/nft", async (req, res) => {
+  const userEmail = req.body.userEmail;
+
+  // Get the id of buyer
+  const getLoginID = "SELECT login_id from login WHERE email = ?;";
+  let login_id;
+  login_id = await new Promise((resolve, error) => {
+    db.query(getLoginID, [userEmail], (err, result) => {
+      login_id = result[0].login_id;
+      resolve(login_id);
+    });
+  });
+
   db.query(
-    "SELECT name,token_id,price_usd,price_eth FROM nft_list where is_avl=1 and owner_id <> 101;",
+    "SELECT name,token_id,price_usd,price_eth FROM nft_list where is_avl=1 and owner_id <> ?;",
+    [login_id],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -209,6 +271,17 @@ app.get("/nft", (req, res) => {
 
 app.post("/nft/sell", async (req, res) => {
   const nft_id = req.body.sellid;
+  const userEmail = req.body.userEmail;
+
+  // Get the id of buyer
+  const getLoginID = "SELECT login_id from login WHERE email = ?;";
+  let login_id;
+  login_id = await new Promise((resolve, error) => {
+    db.query(getLoginID, [userEmail], (err, result) => {
+      login_id = result[0].login_id;
+      resolve(login_id);
+    });
+  });
 
   const sqlUpdate = "UPDATE nft_list SET is_avl = 1  WHERE (token_id = ?);";
   db.query(sqlUpdate, [nft_id], (err, result) => {
@@ -231,8 +304,8 @@ app.post("/nft/sell", async (req, res) => {
     transaction,
     [
       0,
-      100,
-      101,
+      null,
+      login_id,
       nft_id,
       "xxxx",
       new Date().toISOString().slice(0, 19).replace("T", " "),

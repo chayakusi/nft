@@ -18,8 +18,11 @@ export default function Welcome() {
   const [userLogin, setUserLogin] = useState([]);
   const [loginData, setLoginData] = useState([]);
   const [username, setUserName] = useState("");
+  const userEmail = currentUser.email;
   const loadNFT = async () => {
-    const response = await axios.get("http://localhost:3001/nft/get");
+    const response = await axios.post("http://localhost:3001/nft/get", {
+      userEmail: userEmail,
+    });
     setNFTData(response.data);
   };
   const loadLogin = async () => {
@@ -32,7 +35,9 @@ export default function Welcome() {
   };
 
   const loadBalance = async () => {
-    const response = await axios.get("http://localhost:3001/api/get");
+    const response = await axios.post("http://localhost:3001/api/get", {
+      userEmail: userEmail,
+    });
     setUserLogin(response.data);
   };
   useEffect(() => {
@@ -41,7 +46,7 @@ export default function Welcome() {
 
   useEffect(() => {
     loadNFT();
-  }, []);
+  });
 
   useEffect(() => {
     loadBalance();
