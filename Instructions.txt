@@ -14,9 +14,9 @@ Instructions:
 About this Project:
 
 1. Dashboard will show the nft owned by the customer.
-2. Buy NFT does not have balance validation but have value validation.
-3. Once you buy with Name and TokenId, the NFT will be shown in the dashboard. That particular NFT will not be shown in the Buy NFT Page.
-4. In NFT Table: is_avl is the NFT that are available(1-> available, 0-> not available).
+2. Once you buy with Name and TokenId, the NFT will be shown in the dashboard. That particular NFT will not be shown in the Buy NFT Page.
+3. In NFT Table: is_avl is the NFT that are available(1-> available, 0-> not available).
+4. Every manager has some mancode in the login table. Only those users can go to Manager dashboard.
 
 BUGS
 
