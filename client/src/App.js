@@ -15,7 +15,7 @@ import ManDash from "./components/ManDash";
 
 function App() {
   return (
-    <div className="gradient-bg-welcome">
+    <div className="dash">
       <Router>
         <AuthProvider>
           <Routes>

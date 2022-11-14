@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import "../css/Signup.css";
 import {
   Col,
   Form,
@@ -79,13 +80,20 @@ export default function Signup() {
   }
 
   return (
-    <>
+    <div className="signup">
       <Container
         className="d-flex align-items-center justify-content-center"
         style={{ minHeight: "100vh" }}
       >
         <div className="w-100" style={{ maxWidth: "600px" }}>
-          <Card>
+          <Card
+            className="signup-card"
+            style={{
+              backgroundColor: "transparent",
+              color: "white",
+              borderRadius: "20px",
+            }}
+          >
             <Card.Body>
               <h2 className="text-center mb-4">Sign Up</h2>
 
@@ -93,8 +101,11 @@ export default function Signup() {
               <Form onSubmit={handleSubmit}>
                 <Row className="mb-3">
                   <Form.Group as={Col} controlId="formGridFirstName">
-                    <Form.Label>First Name</Form.Label>
+                    <Form.Label className="d-flex justify-content-center align-items-center">
+                      First Name
+                    </Form.Label>
                     <Form.Control
+                      className="signup-input"
                       type="firstname"
                       placeholder="Enter First Name"
                       onChange={(e) => {
@@ -104,8 +115,11 @@ export default function Signup() {
                   </Form.Group>
 
                   <Form.Group as={Col} controlId="formGridLastName">
-                    <Form.Label>Last Name</Form.Label>
+                    <Form.Label className="d-flex justify-content-center align-items-center">
+                      Last Name
+                    </Form.Label>
                     <Form.Control
+                      className="signup-input"
                       type="lastname"
                       onChange={(e) => {
                         setLastName(e.target.value);
@@ -116,8 +130,11 @@ export default function Signup() {
                 </Row>
                 <Row className="mb-3">
                   <Form.Group as={Col} id="email" controlId="formGridEmail">
-                    <Form.Label>Email</Form.Label>
+                    <Form.Label className="d-flex justify-content-center align-items-center">
+                      Email
+                    </Form.Label>
                     <Form.Control
+                      className="signup-input"
                       type="email"
                       ref={emailRef}
                       onChange={(e) => {
@@ -132,8 +149,11 @@ export default function Signup() {
                     id="password"
                     controlId="formGridPassword"
                   >
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label className="d-flex justify-content-center align-items-center">
+                      Password
+                    </Form.Label>
                     <Form.Control
+                      className="signup-input"
                       type="password"
                       onChange={(e) => {
                         setPassword(e.target.value);
@@ -145,8 +165,14 @@ export default function Signup() {
                 </Row>
 
                 <Form.Group className="mb-3" controlId="formGridAddress1">
-                  <Form.Label>Address</Form.Label>
+                  <Form.Label
+                    className="d-flex justify-content-center align-items-center"
+                    s
+                  >
+                    Address
+                  </Form.Label>
                   <Form.Control
+                    className="signup-input"
                     onChange={(e) => {
                       setAddress(e.target.value);
                     }}
@@ -155,8 +181,14 @@ export default function Signup() {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formGridPhoneNo">
-                  <Form.Label>Phone Number</Form.Label>
+                  <Form.Label
+                    className="d-flex justify-content-center align-items-center"
+                    s
+                  >
+                    Phone Number
+                  </Form.Label>
                   <Form.Control
+                    className="signup-input"
                     onChange={(e) => {
                       setPhone(e.target.value);
                     }}
@@ -165,8 +197,14 @@ export default function Signup() {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formGridCellPhoneNo">
-                  <Form.Label>Cell Phone Number</Form.Label>
+                  <Form.Label
+                    className="d-flex justify-content-center align-items-center"
+                    s
+                  >
+                    Cell Phone Number
+                  </Form.Label>
                   <Form.Control
+                    className="signup-input"
                     onChange={(e) => {
                       setCphone(e.target.value);
                     }}
@@ -176,8 +214,14 @@ export default function Signup() {
 
                 <Row className="mb-3">
                   <Form.Group as={Col} controlId="formGridCity">
-                    <Form.Label>City</Form.Label>
+                    <Form.Label
+                      className="d-flex justify-content-center align-items-center"
+                      s
+                    >
+                      City
+                    </Form.Label>
                     <Form.Control
+                      className="signup-input"
                       onChange={(e) => {
                         setCity(e.target.value);
                       }}
@@ -185,8 +229,15 @@ export default function Signup() {
                   </Form.Group>
 
                   <Form.Group as={Col} controlId="formGridState">
-                    <Form.Label>State</Form.Label>
+                    <Form.Label
+                      className="d-flex justify-content-center align-items-center"
+                      s
+                    >
+                      State
+                    </Form.Label>
                     <Form.Select
+                      className="signup-input"
+                      style={{ color: "black" }}
                       onChange={(e) => {
                         setState(e.target.value);
                       }}
@@ -248,8 +299,14 @@ export default function Signup() {
                   </Form.Group>
 
                   <Form.Group as={Col} controlId="formGridZip">
-                    <Form.Label>Zip</Form.Label>
+                    <Form.Label
+                      className="d-flex justify-content-center align-items-center"
+                      s
+                    >
+                      Zip
+                    </Form.Label>
                     <Form.Control
+                      className="signup-input"
                       type="number"
                       onChange={(e) => {
                         setZip(e.target.value);
@@ -267,6 +324,7 @@ export default function Signup() {
                   >
                     <Form.Group className="mb-3" controlId="formGridBalance">
                       <Form.Control
+                        className="signup-input"
                         type="number"
                         onChange={(e) => {
                           setBalance(e.target.value);
@@ -287,11 +345,14 @@ export default function Signup() {
               </Form>
             </Card.Body>
           </Card>
-          <div className="w-100 text-center mt-2">
-            Already have an account? <Link to="/">Log In</Link>
+          <div className="w-100 text-center mt-2" style={{ color: "white" }}>
+            Already have an account?{" "}
+            <Link to="/" style={{ color: "aqua" }}>
+              Log In
+            </Link>
           </div>
         </div>
       </Container>
-    </>
+    </div>
   );
 }

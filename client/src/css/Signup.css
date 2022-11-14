@@ -1,0 +1,34 @@
+.signup{
+    background-image: url("../photos/signup.jpg");
+    background-size:cover;
+    background-repeat: no-repeat;
+}
+.signup-card{
+    box-shadow: -3px -3px 9px #aaa9a9a2,
+              3px 3px 7px rgba(147, 149, 151, 0.671);
+    
+}
+.signup-card .login_button{
+    color: rgb(9, 7, 7);
+     font-size: 20px;
+  font-weight: 500;
+  border: 2px solid rgba(255, 255, 255, 0.438);
+  background: rgba(105, 105, 105, 0);
+
+
+}
+.signup-card .signup-input{
+    color:white;
+        border-radius: 50px;
+        height:40px;
+        background-color: transparent;
+        
+}
+.signup-card .signup-input:active{
+    border: 2px solid rgba(9, 9, 1, 0.438);
+    background-color: transparent;
+
+}
+.signup-card .signup-input:hover{
+    border: 2px solid rgba(9, 9, 1, 0.438);
+}
