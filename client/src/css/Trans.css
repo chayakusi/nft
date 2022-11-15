@@ -1,4 +1,5 @@
 .trans-table{
+    color:white;
     border-collapse: collapse;
     margin:auto;
     font-size: 0.9em;
@@ -9,7 +10,7 @@
 }
 
 .trans-table thead tr{
-    background-color: #061589de;
+    background-color: #020d63de;
     color: #fff;
     text-align: left;
 }
@@ -21,8 +22,6 @@
     border-bottom: 1px solid #ddd;
 }
 
-.trans-table tbody tr:nth-of-type(even){
-    background-color: #f3f3f3;
-}
+
 
 

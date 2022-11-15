@@ -37,7 +37,7 @@ export default function ManDash() {
       {error && <Alert variant="danger">{error}</Alert>}
       <strong>Email:</strong> {currentUser.email}
       <div
-        style={{ margin: "20px" }}
+        style={{ margin: "20px", color: "white" }}
         className="d-flex justify-content-center align-items-center"
       >
         <h1>Hello,&nbsp;</h1>

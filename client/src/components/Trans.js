@@ -26,7 +26,7 @@ export default function Trans() {
       <Navbar />
       <div
         className="d-flex justify-content-center align-items-center"
-        style={{ margin: "20px" }}
+        style={{ margin: "20px", color: "white" }}
       >
         <h1>Your Transactions</h1>
       </div>

@@ -64,67 +64,75 @@ export default function SellNFT() {
       <Navbar />
       <div
         className="d-flex justify-content-center align-items-center"
-        style={{ margin: "20px" }}
+        style={{ margin: "20px", color: "white" }}
       >
         <h1>Are You Ready to Sell!!</h1>
       </div>
-      <div className="d-flex justify-content-center align-items-center flex-column">
-        <h3>Enter Name and ID to Sell:</h3>
-        <div style={{ margin: "20px" }}>
-          <table className="styled-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Token ID</th>
-                <th>Price USD</th>
-                <th>Price ETH</th>
-              </tr>
-            </thead>
-            <tbody>
-              {NFTdata.map((item, index) => {
-                return (
-                  <tr>
-                    <td>{item.name}</td>
-                    <td>{item.token_id}</td>
-                    <td>{item.price_usd}</td>
-                    <td>{item.price_eth}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+      <div
+        style={{ color: "white", marginTop: "100px" }}
+        className="d-flex justify-content-around align-items-center"
+      >
+        <div className="d-flex justify-content-center align-items-center flex-column">
+          <h3>Choose your NFT!!</h3>
+          <div style={{ margin: "20px" }}>
+            <table className="styled-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Token ID</th>
+                  <th>Price USD</th>
+                  <th>Price ETH</th>
+                </tr>
+              </thead>
+              <tbody>
+                {NFTdata.map((item, index) => {
+                  return (
+                    <tr>
+                      <td>{item.name}</td>
+                      <td>{item.token_id}</td>
+                      <td>{item.price_usd}</td>
+                      <td>{item.price_eth}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div className="w-100" style={{ maxWidth: "600px" }}>
-          <h2 className="text-center mb-4">Enter Name and ID to Sell:</h2>
-          <Form onSubmit={handleSell}>
-            <Form.Group className="mb-3">
-              <Form.Label className="d-flex justify-content-center align-items-center">
-                Name
-              </Form.Label>
-              <Form.Control
-                id="sellname"
-                name="sellname"
-                onChange={handleInputChange}
-                type="name"
-                placeholder="Enter Name"
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label className="d-flex justify-content-center align-items-center">
-                ID
-              </Form.Label>
-              <Form.Control
-                id="sellid"
-                name="sellid"
-                onChange={handleInputChange}
-                type="number"
-                placeholder="Enter ID"
-              />
-            </Form.Group>
-            <Button className="w-100" type="submit">
-              Sell
-            </Button>
-          </Form>
+        <div>
+          <div className="w-100" style={{ maxWidth: "600px" }}>
+            <h2 className="text-center mb-4">Enter Name and ID to Sell:</h2>
+            <Form onSubmit={handleSell}>
+              <Form.Group className="mb-3">
+                <Form.Label className="d-flex justify-content-center align-items-center">
+                  Name
+                </Form.Label>
+                <Form.Control
+                  autoComplete="off"
+                  id="sellname"
+                  name="sellname"
+                  onChange={handleInputChange}
+                  type="name"
+                  placeholder="Enter Name"
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label className="d-flex justify-content-center align-items-center">
+                  ID
+                </Form.Label>
+                <Form.Control
+                  id="sellid"
+                  name="sellid"
+                  onChange={handleInputChange}
+                  type="number"
+                  placeholder="Enter ID"
+                />
+              </Form.Group>
+              <Button className="w-100" type="submit">
+                Sell
+              </Button>
+            </Form>
+          </div>
         </div>
       </div>
     </>
