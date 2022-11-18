@@ -9,11 +9,14 @@ import "react-toastify/dist/ReactToastify.css";
 const initialState = {
   nft_name: "",
   nft_id: "",
+  nft_price: "Price",
+  nft_commission: "Commission",
+  nft_total: "Total",
 };
 
 export default function BuyNFT() {
   const [state, setState] = useState(initialState);
-  const { nft_name, nft_id } = state;
+  const { nft_name, nft_id, nft_price, nft_commission, nft_total } = state;
   const [NFTdata, setNFTData] = useState([]);
   const { currentUser } = useAuth();
   const userEmail = currentUser.email;
@@ -128,9 +131,71 @@ export default function BuyNFT() {
                 />
               </Form.Group>
 
-              <Button className="w-100" type="submit">
-                Buy
-              </Button>
+              <div>
+                <Button className="w-100">Check Price</Button>
+              </div>
+              <div className="d-flex justify-content-center align-items-center">
+                <div style={{ marginTop: "20px" }}>
+                  <label>Commision</label>
+                  {["radio"].map((type) => (
+                    <div key={`inline-${type}`} className="mb-3">
+                      <Form.Check
+                        inline
+                        label="ETH"
+                        name="group1"
+                        type={type}
+                        id={`inline-${type}-ETH`}
+                      />
+                      <Form.Check
+                        inline
+                        label="USD"
+                        name="group1"
+                        type={type}
+                        id={`inline-${type}-USD`}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <input
+                    type="number"
+                    id="nft_price"
+                    name="nft_price"
+                    disabled
+                    placeholder={nft_price}
+                    style={{ backgroundColor: "white" }}
+                  ></input>
+                  +
+                  <input
+                    type="number"
+                    id="nft_commission"
+                    name="nft_commission"
+                    disabled
+                    placeholder={nft_commission}
+                    style={{ backgroundColor: "white" }}
+                  ></input>
+                  =
+                  <div
+                    style={{ marginTop: "5px" }}
+                    className="d-flex justify-content-center align-items-center"
+                  >
+                    <input
+                      type="number"
+                      id="nft_total"
+                      name="nft_total"
+                      disabled
+                      placeholder={nft_total}
+                      style={{ backgroundColor: "white" }}
+                    ></input>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <Button className="w-100" type="submit">
+                  Buy
+                </Button>
+              </div>
             </Form>
           </div>
         </div>
