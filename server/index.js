@@ -28,6 +28,48 @@ app.get("/api/login", (req, res) => {
   });
 });
 
+app.post("/api/updateBal", async (req, res) => {
+  const userEmail = req.body.userEmail;
+  const addMoney = req.body.addMoney;
+
+  // Get the id of buyer
+  const getLoginID = "SELECT login_id from login WHERE email = ?;";
+  let login_id;
+  login_id = await new Promise((resolve, error) => {
+    db.query(getLoginID, [userEmail], (err, result) => {
+      login_id = result[0].login_id;
+      resolve(login_id);
+    });
+  });
+
+  //Update the balance
+  const sqlUpdate =
+    "UPDATE login SET bal_usd = bal_usd + ?  WHERE (email = ?);";
+  db.query(sqlUpdate, [addMoney, userEmail], (err, result) => {
+    console.log(err);
+  });
+
+  //Log this transaction
+  const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?);";
+  db.query(
+    transaction,
+    [
+      0,
+      login_id,
+      null,
+      null,
+      "xxxx",
+      new Date().toISOString().slice(0, 19).replace("T", " "),
+      "Added Money",
+      0,
+      addMoney,
+    ],
+    (err, result) => {
+      console.log(err);
+    }
+  );
+});
+
 app.post("/api/get", async (req, res) => {
   const userEmail = req.body.userEmail;
 

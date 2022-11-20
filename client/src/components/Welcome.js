@@ -4,14 +4,11 @@ import axios from "axios";
 import "../css/Welcome.css";
 import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-export default function Welcome() {
-  // const [NFTList, setNFTList] = useState([]);
-  // const getHoldings = () => {
-  //     Axios.get("http://localhost:3001/nft").then((response) => {
-  //       setNFTList(response.data);
-  //     });
-  //   };
+import { Button } from "react-bootstrap";
+import Modal from "./Modal";
 
+export default function Welcome() {
+  const [modalOpen, setModalOpen] = useState(false);
   //nft fetch in single run
   const { currentUser } = useAuth();
   const [NFTdata, setNFTData] = useState([]);
@@ -80,19 +77,42 @@ export default function Welcome() {
           </h1>
         </div>
       </div>
+
       <div
         style={{ color: "white", marginTop: "40px" }}
         className="d-flex justify-content-around align-items-center"
       >
-        <div
-          style={{ fontSize: "30px" }}
-          className="d-flex justify-content-center align-items-center"
-        >
-          Current Balance: $
-          <div>
-            {userLogin.map((item, index) => {
-              return <>{item.bal_usd}</>;
-            })}
+        {modalOpen && <Modal setOpenModal={setModalOpen} />}
+
+        <div>
+          <div className="d-flex justify-content-center align-items-center flex-column">
+            <div
+              style={{ fontSize: "30px" }}
+              d-flex
+              justify-content-center
+              align-items-center
+            >
+              Current Balance: $
+              {userLogin.map((item, index) => {
+                return <>{item.bal_usd}</>;
+              })}
+            </div>
+            <div
+              style={{ marginTop: "30px" }}
+              className="d-flex justify-content-around align-items-center"
+            >
+              <Button
+                className="openModalBtn"
+                onClick={() => {
+                  setModalOpen(true);
+                }}
+                style={{ margin: "10px" }}
+              >
+                Add USD
+              </Button>
+
+              <Button style={{ margin: "10px" }}>Buy ETH</Button>
+            </div>
           </div>
         </div>
 
