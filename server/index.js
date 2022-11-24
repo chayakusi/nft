@@ -73,6 +73,7 @@ app.post("/api/updateBal", async (req, res) => {
 app.post("/api/updateETH", async (req, res) => {
   const userEmail = req.body.userEmail;
   const addEth = req.body.addEth;
+  const convRate = req.body.convRate;
 
   // Get the id of buyer
   const getLoginID = "SELECT login_id from login WHERE email = ?;";
@@ -93,7 +94,7 @@ app.post("/api/updateETH", async (req, res) => {
       resolve(bal_usd);
     });
   });
-  if (bal_usd >= 50 * addEth) {
+  if (bal_usd >= convRate * addEth) {
     //Update the balance
     const sqlUpdate =
       "UPDATE login SET bal_eth = bal_eth + ?  WHERE (email = ?);";
@@ -102,7 +103,7 @@ app.post("/api/updateETH", async (req, res) => {
     });
 
     const sqlUpdate1 =
-      "UPDATE login SET bal_usd = bal_usd - (50*?)   WHERE (email = ?);";
+      "UPDATE login SET bal_usd = bal_usd - (convRate*?)   WHERE (email = ?);";
     db.query(sqlUpdate1, [addEth, userEmail], (err, result) => {
       console.log(err);
     });
