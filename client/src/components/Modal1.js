@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import "../css/Modal.css";
 import { useAuth } from "../contexts/AuthContext";
@@ -7,6 +7,19 @@ function Modal1({ setOpenModal }) {
   const { currentUser } = useAuth();
   const userEmail = currentUser.email;
   const [addEth, setAddEth] = useState("");
+  const [convRate, setConvRate] = useState(0);
+
+  useEffect(() => {
+    const getConvRate = async () => {
+      const response = await axios.get(
+        "https://api.coinbase.com/v2/prices/BTC-USD/buy"
+      );
+      setConvRate(parseInt(response.data.data.amount, 10));
+      console.log(convRate);
+    };
+
+    getConvRate();
+  }, []);
 
   const updateETH = (e) => {
     e.preventDefault();
@@ -16,6 +29,7 @@ function Modal1({ setOpenModal }) {
       axios.post("http://localhost:3001/api/updateETH", {
         userEmail: userEmail,
         addEth: addEth,
+        convRate: convRate
       });
       alert("Successfully traded!!");
       setOpenModal(false);
@@ -36,7 +50,7 @@ function Modal1({ setOpenModal }) {
         </div>
         <div className="title flex-column">
           <h1>How much ETH??</h1>
-          <h5>(1 ETH = 50 USD)</h5>
+          <h5>(1 ETH = {convRate} USD)</h5>
         </div>
         <div style={{ marginTop: "40px" }} className="body">
           <input
