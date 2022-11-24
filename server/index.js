@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
-const mysql = require("mysql2");
+const mysql = require("mysql");
 
 var ethers = require("ethers");
 var crypto = require("crypto");
@@ -13,7 +13,7 @@ var privateKey = "0x" + id;
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "Chaya@sql123",
+  password: "tanmay",
   database: "mydb",
 });
 
@@ -215,18 +215,18 @@ app.post("/nft/check", (req, res) => {
     if (com_type == "eth") {
       rate = 0.1;
     } else {
-      rate = conv_rate*0.1;
+      rate = conv_rate * 0.1;
     }
   } else {
     if (com_type == "eth") {
       rate = 0.2;
     } else {
-      rate = conv_rate*0.2;
+      rate = conv_rate * 0.2;
     }
   }
   //Get the price of NFT
   const getAmt =
-  "SELECT price_eth * ? as comm from nft_list where (token_id = ?);";
+    "SELECT price_eth * ? as comm from nft_list where (token_id = ?);";
   db.query(getAmt, [rate, nft_id], (err, result) => {
     res.send(result);
   });

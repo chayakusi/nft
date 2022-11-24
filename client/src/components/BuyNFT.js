@@ -52,7 +52,7 @@ export default function BuyNFT() {
 
   const loadNFT = async () => {
     const response = await Axios.post("http://localhost:3001/nft", {
-      login_id: login_id
+      login_id: login_id,
     });
     setNFTData(response.data);
   };
@@ -63,17 +63,11 @@ export default function BuyNFT() {
 
   useEffect(() => {
     loadNFT();
-  }, []);
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setState({ ...state, [name]: value });
-    console.log("nft_id");
-    console.log(nft_id);
-    // const res = await Axios.post("http://localhost:3001/nft/price", {
-    //   nft_id: nft_id
-    // });
-    // setState({nft_price: res.data.data.price_usd});
   };
   const handleCheck = async (e) => {
     e.preventDefault();
@@ -84,7 +78,7 @@ export default function BuyNFT() {
     if (!nft_name || !nft_id || !com_type || !valid) {
       alert("Check your values");
     } else {
-      if(com_type == "usd") {
+      if (com_type === "usd") {
         getConvRate();
       }
       const response = await Axios.post("http://localhost:3001/nft/check", {
@@ -93,7 +87,7 @@ export default function BuyNFT() {
         com_type: com_type,
         login_id: login_id,
         type: type,
-        conv_rate: convRate
+        conv_rate: convRate,
       });
       setCommission(response.data[0].comm);
     }
