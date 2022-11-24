@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
 var ethers = require("ethers");
 var crypto = require("crypto");
@@ -13,7 +13,7 @@ var privateKey = "0x" + id;
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "tanmay",
+  password: "Chaya@sql123",
   database: "mydb",
 });
 
@@ -208,30 +208,28 @@ app.post("/nft/check", (req, res) => {
   const com_type = req.body.com_type;
   const login_id = req.body.login_id;
   const type = req.body.type;
+  const conv_rate = req.body.conv_rate;
+  let rate;
 
   if (type == "GOLD") {
     if (com_type == "eth") {
-      //Get the price of NFT
-      const getAmt =
-        "SELECT price_eth*0.1 as comm from nft_list where (token_id = ?);";
-      db.query(getAmt, [nft_id], (err, result) => {
-        res.send(result);
-      });
+      rate = 0.1;
     } else {
-      //commision for usd
+      rate = conv_rate*0.1;
     }
   } else {
     if (com_type == "eth") {
-      //Get the price of NFT
-      const getAmt =
-        "SELECT price_eth*0.2 as comm from nft_list where (token_id = ?);";
-      db.query(getAmt, [nft_id], (err, result) => {
-        res.send(result);
-      });
+      rate = 0.2;
     } else {
-      //commision for usd
+      rate = conv_rate*0.2;
     }
   }
+  //Get the price of NFT
+  const getAmt =
+  "SELECT price_eth * ? as comm from nft_list where (token_id = ?);";
+  db.query(getAmt, [rate, nft_id], (err, result) => {
+    res.send(result);
+  });
 });
 
 app.post("/nft/buy", async (req, res) => {
