@@ -72,7 +72,7 @@ app.post("/api/updateBal", async (req, res) => {
 
 app.post("/api/updateETH", async (req, res) => {
   const userEmail = req.body.userEmail;
-  const addEth = req.body.addEth;
+  const addEth = parseInt(req.body.addEth);
   const convRate = req.body.convRate;
 
   // Get the id of buyer
@@ -103,11 +103,11 @@ app.post("/api/updateETH", async (req, res) => {
     });
 
     const sqlUpdate1 =
-      "UPDATE login SET bal_usd = bal_usd - (convRate*?)   WHERE (email = ?);";
-    db.query(sqlUpdate1, [addEth, userEmail], (err, result) => {
+      "UPDATE login SET bal_usd = bal_usd - (?*?)   WHERE (email = ?);";
+    db.query(sqlUpdate1, [convRate, addEth, userEmail], (err, result) => {
       console.log(err);
     });
-
+    let date_time = new Date().toISOString().slice(0, 19).replace("T", " ");
     //Log this transaction
     const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?);";
     db.query(
@@ -118,7 +118,7 @@ app.post("/api/updateETH", async (req, res) => {
         null,
         null,
         "xxxx",
-        new Date().toISOString().slice(0, 19).replace("T", " "),
+        date_time,
         "Added ETH",
         0,
         addEth,
@@ -223,7 +223,6 @@ app.post("/nft/check", (req, res) => {
       rate = conv_rate*0.2;
     }
   }
-  console.log(rate);
   //Get the price of NFT
   const getAmt =
   "SELECT price_eth * ? as comm from nft_list where (token_id = ?);";
