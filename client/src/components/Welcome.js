@@ -6,9 +6,10 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { Button } from "react-bootstrap";
 import Modal from "./Modal";
-
+import Modal1 from "./Modal1";
 export default function Welcome() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen1, setModalOpen1] = useState(false);
   //nft fetch in single run
   const { currentUser } = useAuth();
   const [NFTdata, setNFTData] = useState([]);
@@ -51,7 +52,7 @@ export default function Welcome() {
 
   useEffect(() => {
     loadBalance();
-  }, []);
+  });
 
   return (
     <>
@@ -83,6 +84,7 @@ export default function Welcome() {
         className="d-flex justify-content-around align-items-center"
       >
         {modalOpen && <Modal setOpenModal={setModalOpen} />}
+        {modalOpen1 && <Modal1 setOpenModal={setModalOpen1} />}
 
         <div>
           <div className="d-flex justify-content-center align-items-center flex-column">
@@ -95,6 +97,17 @@ export default function Welcome() {
               Current Balance: $
               {userLogin.map((item, index) => {
                 return <>{item.bal_usd}</>;
+              })}
+            </div>
+            <div
+              style={{ fontSize: "30px" }}
+              d-flex
+              justify-content-center
+              align-items-center
+            >
+              Current ETH: &nbsp;
+              {userLogin.map((item, index) => {
+                return <>{item.bal_eth === null || 0 ? 0 : item.bal_eth}</>;
               })}
             </div>
             <div
@@ -111,7 +124,15 @@ export default function Welcome() {
                 Add USD
               </Button>
 
-              <Button style={{ margin: "10px" }}>Buy ETH</Button>
+              <Button
+                className="openModalBtn1"
+                onClick={() => {
+                  setModalOpen1(true);
+                }}
+                style={{ margin: "10px" }}
+              >
+                Buy ETH
+              </Button>
             </div>
           </div>
         </div>

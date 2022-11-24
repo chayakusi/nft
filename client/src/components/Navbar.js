@@ -38,6 +38,9 @@ const Navbar = () => {
         <Link to="/trans" style={{ textDecoration: "none" }}>
           <li className="nav-links">Transactions</li>
         </Link>
+        <Link to="/user" style={{ textDecoration: "none" }}>
+          <li className="nav-links">User</li>
+        </Link>
         <li className="nav-links-btn">
           <Button
             style={{ color: "white", textDecoration: "none" }}

@@ -12,6 +12,7 @@ import SellNFT from "./components/SellNFT";
 import Manlogin from "./components/Manlogin";
 import Trans from "./components/Trans";
 import ManDash from "./components/ManDash";
+import User from "./components/User";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="/manlogin" element={<Manlogin />} />
             <Route path="/trans" element={<Trans />} />
             <Route path="/manpage" element={<ManDash />} />
+            <Route path="/user" element={<User />} />
           </Routes>
         </AuthProvider>
       </Router>

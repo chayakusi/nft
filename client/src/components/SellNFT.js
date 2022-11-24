@@ -28,7 +28,7 @@ export default function SellNFT() {
 
   useEffect(() => {
     loadNFT();
-  }, []);
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

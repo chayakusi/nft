@@ -10,72 +10,88 @@ import axios from "axios";
 const initialState = {
   nft_name: "",
   nft_id: "",
-  nft_price: "Price",
-  nft_commission: "Commission",
-  nft_total: "Total",
   com_type: "",
 };
 
 export default function BuyNFT() {
   const [state, setState] = useState(initialState);
-  const { nft_name, nft_id, nft_price, nft_commission, nft_total, com_type } =
-    state;
+  const { nft_name, nft_id, com_type } = state;
   const [userData, setUserData] = useState([]);
   const [NFTdata, setNFTData] = useState([]);
+  const [commission, setCommission] = useState();
   const [convRate, setConvRate] = useState(0);
+  const [bal_usd, setBalUSD] = useState(0);
+  const [bal_eth, setBalEth] = useState(0);
+  const [login_id, setLoginId] = useState("");
+  const [type, setType] = useState("");
   const { currentUser } = useAuth();
   const userEmail = currentUser.email;
   const navigate = useNavigate();
 
-  const getConvRate = () => {
-    axios.get("https://api.coinbase.com/v2/prices/BTC-USD/buy").then(
-      (res) => {
-        console.log(parseInt(res.data.data.amount, 10));
-        setConvRate(parseInt(res.data.data.amount, 10));
-      },
-      (err) => {
-        console.log(err);
+  const loadUser = async () => {
+    const response = await axios.get("http://localhost:3001/api/login");
+    setUserData(response.data);
+
+    userData.forEach((item, index) => {
+      if (item.email === userEmail) {
+        setLoginId(item.login_id);
+        setType(item.type);
+        setBalUSD(item.bal_usd);
+        setBalEth(item.bal_eth);
       }
+    });
+  };
+
+  const getConvRate = async () => {
+    const response = await axios.get(
+      "https://api.coinbase.com/v2/prices/BTC-USD/buy"
     );
+    setConvRate(parseInt(response.data.data.amount, 10));
+    console.log(convRate);
   };
 
   const loadNFT = async () => {
-    console.log("here");
     const response = await Axios.post("http://localhost:3001/nft", {
-      login_id: userData[0].login_id,
+      login_id: login_id,
     });
     setNFTData(response.data);
   };
 
   useEffect(() => {
-    Axios.post("http://localhost:3001/user", {
-      userEmail: userEmail,
-    })
-      .then(
-        (response) => {
-          setUserData(response.data);
-        },
-        (err) => {
-          console.log(err);
-        }
-      )
-      .then(() => {
-        // let login_id, bal_usd, bal_eth;
-        // login_id = userData[0].login_id;
-        // bal_usd = userData[0].bal_usd;
-        // bal_eth = userData[0].bal_eth;
-        console.log(userData);
-        loadNFT();
-      });
+    loadUser();
+  });
+
+  useEffect(() => {
+    loadNFT();
+  });
+
+  useEffect(() => {
     getConvRate();
-    console.log(convRate);
-  }, []);
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setState({ ...state, [name]: value });
   };
-
+  const handleCheck = async (e) => {
+    e.preventDefault();
+    let valid = false;
+    NFTdata.forEach((item, index) => {
+      if (item.name === nft_name && item.token_id === nft_id) valid = true;
+    });
+    if (!nft_name || !nft_id || !com_type || !valid) {
+      alert("Check your values");
+    } else {
+      const response = await Axios.post("http://localhost:3001/nft/check", {
+        nft_name: nft_name,
+        nft_id: nft_id,
+        com_type: com_type,
+        login_id: login_id,
+        type: type,
+      });
+      setCommission(response.data[0].comm);
+    }
+  };
   const handleBuy = (e) => {
     e.preventDefault();
     let valid = false;
@@ -86,8 +102,8 @@ export default function BuyNFT() {
       alert("Check your values");
     } else {
       if (
-        (com_type == "usd" && userData[0].bal_usd < 0) ||
-        (com_type == "eth" && userData[0].bal_eth < 0)
+        (com_type === "usd" && bal_usd < 0) ||
+        (com_type === "eth" && bal_eth < 0)
       ) {
         alert("Balance is insufficient to proceed");
       } else {
@@ -95,9 +111,9 @@ export default function BuyNFT() {
           nft_name: nft_name,
           nft_id: nft_id,
           com_type: com_type,
-          login_id: userData[0].login_id,
-          bal_usd: userData[0].bal_usd,
-          bal_eth: userData[0].bal_eth,
+          login_id: login_id,
+          bal_usd: bal_usd,
+          bal_eth: bal_eth,
         }).then(() => {
           setState({ nft_name: "", nft_id: "", com_type: "" });
         });
@@ -178,33 +194,7 @@ export default function BuyNFT() {
                   placeholder="Enter ID"
                 />
               </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label className="d-flex justify-content-center align-items-center">
-                  How do you want to pay the transaction fee?
-                </Form.Label>
-                <Form.Check
-                  name="com_type"
-                  value="usd"
-                  type="radio"
-                  aria-label="radio 1"
-                  label="USD"
-                  onChange={handleInputChange}
-                  checked={com_type === "usd"}
-                />
-                <Form.Check
-                  name="com_type"
-                  value="eth"
-                  type="radio"
-                  aria-label="radio 2"
-                  label="Ethereum"
-                  onChange={handleInputChange}
-                  checked={com_type === "eth"}
-                />
-              </Form.Group>
 
-              <div>
-                <Button className="w-100">Check Price</Button>
-              </div>
               <div className="d-flex justify-content-center align-items-center">
                 <div style={{ marginTop: "20px" }}>
                   <label>Commision</label>
@@ -212,57 +202,40 @@ export default function BuyNFT() {
                     <div key={`inline-${type}`} className="mb-3">
                       <Form.Check
                         inline
+                        onChange={handleInputChange}
                         label="ETH"
-                        name="group1"
+                        name="com_type"
                         type={type}
-                        id={`inline-${type}-ETH`}
+                        id="eth"
+                        value="eth"
                       />
                       <Form.Check
                         inline
                         label="USD"
-                        name="group1"
+                        name="com_type"
                         type={type}
-                        id={`inline-${type}-USD`}
+                        id="usd"
+                        value="usd"
+                        onChange={handleInputChange}
                       />
                     </div>
                   ))}
                 </div>
                 <div>
-                  <input
-                    type="number"
-                    id="nft_price"
-                    name="nft_price"
-                    disabled
-                    placeholder={nft_price}
-                    style={{ backgroundColor: "white" }}
-                  ></input>
-                  +
-                  <input
-                    type="number"
-                    id="nft_commission"
-                    name="nft_commission"
-                    disabled
-                    placeholder={nft_commission}
-                    style={{ backgroundColor: "white" }}
-                  ></input>
-                  =
-                  <div
-                    style={{ marginTop: "5px" }}
-                    className="d-flex justify-content-center align-items-center"
-                  >
-                    <input
-                      type="number"
-                      id="nft_total"
-                      name="nft_total"
-                      disabled
-                      placeholder={nft_total}
-                      style={{ backgroundColor: "white" }}
-                    ></input>
-                  </div>
+                  Commision Rate is {commission}{" "}
+                  {com_type === "eth" ? "ETH" : "USD"}
                 </div>
               </div>
-
-              <div>
+              <div className=" d-flex justify-content-center align-items-center">
+                <Button
+                  style={{ backgroundColor: "blue" }}
+                  onClick={handleCheck}
+                  className="w-50 "
+                >
+                  Check Commission
+                </Button>
+              </div>
+              <div style={{ marginTop: "10px" }}>
                 <Button className="w-100" type="submit">
                   Buy
                 </Button>

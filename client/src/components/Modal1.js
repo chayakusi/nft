@@ -3,21 +3,21 @@ import { Button } from "react-bootstrap";
 import "../css/Modal.css";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
-function Modal({ setOpenModal }) {
+function Modal1({ setOpenModal }) {
   const { currentUser } = useAuth();
   const userEmail = currentUser.email;
-  const [addMoney, setAddMoney] = useState("");
+  const [addEth, setAddEth] = useState("");
 
-  const updateBalance = (e) => {
+  const updateETH = (e) => {
     e.preventDefault();
-    if (addMoney.length === 0) {
+    if (addEth.length === 0) {
       alert("Enter correct value");
     } else {
-      axios.post("http://localhost:3001/api/updateBal", {
+      axios.post("http://localhost:3001/api/updateETH", {
         userEmail: userEmail,
-        addMoney: addMoney,
+        addEth: addEth,
       });
-      alert("Money successfully added!!");
+      alert("Successfully traded!!");
       setOpenModal(false);
     }
   };
@@ -35,26 +35,26 @@ function Modal({ setOpenModal }) {
           </button>
         </div>
         <div className="title flex-column">
-          <h1>How much money??</h1>
-          <h1>🤑</h1>
+          <h1>How much ETH??</h1>
+          <h5>(1 ETH = 50 USD)</h5>
         </div>
         <div style={{ marginTop: "40px" }} className="body">
           <input
             onChange={(e) => {
-              setAddMoney(e.target.value);
+              setAddEth(e.target.value);
             }}
             type="number"
             min="1"
-            max="100"
+            max="50"
             required
           />
         </div>
         <div className="footer">
-          <Button onClick={updateBalance}>Buy</Button>
+          <Button onClick={updateETH}>Buy</Button>
         </div>
       </div>
     </div>
   );
 }
 
-export default Modal;
+export default Modal1;
