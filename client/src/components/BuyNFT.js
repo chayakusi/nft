@@ -11,11 +11,13 @@ const initialState = {
   nft_name: "",
   nft_id: "",
   com_type: "",
+  nft_price_usd: "",
+  nft_price_eth: "",
 };
 
 export default function BuyNFT() {
   const [state, setState] = useState(initialState);
-  const { nft_name, nft_id, com_type } = state;
+  const { nft_name, nft_id, com_type, nft_price_usd, nft_price_eth } = state;
   const [userData, setUserData] = useState([]);
   const [NFTdata, setNFTData] = useState([]);
   const [commission, setCommission] = useState();
@@ -63,7 +65,8 @@ export default function BuyNFT() {
 
   useEffect(() => {
     loadNFT();
-  });
+    getConvRate();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -78,7 +81,7 @@ export default function BuyNFT() {
     if (!nft_name || !nft_id || !com_type || !valid) {
       alert("Check your values");
     } else {
-      if (com_type === "usd") {
+      if (com_type == "usd") {
         getConvRate();
       }
       const response = await Axios.post("http://localhost:3001/nft/check", {
@@ -95,15 +98,22 @@ export default function BuyNFT() {
   const handleBuy = (e) => {
     e.preventDefault();
     let valid = false;
+    console.log(nft_name, nft_id);
     NFTdata.forEach((item, index) => {
-      if (item.name === nft_name && item.token_id === nft_id) valid = true;
+      if (item.name === nft_name && item.token_id === nft_id) {
+        valid = true;
+        setState({
+          nft_price_usd: item.price_usd,
+          nft_price_eth: item.price_eth,
+        });
+      }
     });
     if (!nft_name || !nft_id || !com_type || !valid) {
       alert("Check your values");
     } else {
       if (
-        (com_type === "usd" && bal_usd < 0) ||
-        (com_type === "eth" && bal_eth < 0)
+        (com_type === "usd" && bal_usd < nft_price_usd + commission) ||
+        (com_type === "eth" && bal_eth < nft_price_eth + commission)
       ) {
         alert("Balance is insufficient to proceed");
       } else {
@@ -112,8 +122,7 @@ export default function BuyNFT() {
           nft_id: nft_id,
           com_type: com_type,
           login_id: login_id,
-          bal_usd: bal_usd,
-          bal_eth: bal_eth,
+          commission: commission,
         }).then(() => {
           setState({ nft_name: "", nft_id: "", com_type: "" });
         });
@@ -221,7 +230,7 @@ export default function BuyNFT() {
                   ))}
                 </div>
                 <div>
-                  Commision Rate is {commission}{" "}
+                  Commission Rate is {Math.round(commission * 100) / 100}{" "}
                   {com_type === "eth" ? "ETH" : "USD"}
                 </div>
               </div>

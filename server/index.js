@@ -72,7 +72,7 @@ app.post("/api/updateBal", async (req, res) => {
 
 app.post("/api/updateETH", async (req, res) => {
   const userEmail = req.body.userEmail;
-  const addEth = req.body.addEth;
+  const addEth = parseInt(req.body.addEth);
   const convRate = req.body.convRate;
 
   // Get the id of buyer
@@ -103,26 +103,16 @@ app.post("/api/updateETH", async (req, res) => {
     });
 
     const sqlUpdate1 =
-      "UPDATE login SET bal_usd = bal_usd - (?)   WHERE (email = ?);";
-    db.query(sqlUpdate1, [convRate * addEth, userEmail], (err, result) => {
+      "UPDATE login SET bal_usd = bal_usd - (?*?)   WHERE (email = ?);";
+    db.query(sqlUpdate1, [convRate, addEth, userEmail], (err, result) => {
       console.log(err);
     });
-
+    let date_time = new Date().toISOString().slice(0, 19).replace("T", " ");
     //Log this transaction
     const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?);";
     db.query(
       transaction,
-      [
-        0,
-        login_id,
-        null,
-        null,
-        "xxxx",
-        new Date().toISOString().slice(0, 19).replace("T", " "),
-        "Added ETH",
-        0,
-        addEth,
-      ],
+      [0, login_id, null, null, "xxxx", date_time, "Added ETH", 0, addEth],
       (err, result) => {
         console.log(err);
       }
@@ -204,10 +194,8 @@ app.post("/user", (req, res) => {
 });
 
 app.post("/nft/check", (req, res) => {
-  const nft_name = req.body.nft_name;
   const nft_id = req.body.nft_id;
   const com_type = req.body.com_type;
-  const login_id = req.body.login_id;
   const type = req.body.type;
   const conv_rate = req.body.conv_rate;
   let rate;
@@ -229,6 +217,7 @@ app.post("/nft/check", (req, res) => {
   const getAmt =
     "SELECT price_eth * ? as comm from nft_list where (token_id = ?);";
   db.query(getAmt, [rate, nft_id], (err, result) => {
+    console.log(result);
     res.send(result);
   });
 });
@@ -237,37 +226,42 @@ app.post("/nft/buy", async (req, res) => {
   const nft_id = req.body.nft_id;
   const com_type = req.body.com_type;
   const login_id = req.body.login_id;
-  const bal_usd = req.body.bal_usd;
-  const bal_eth = req.body.bal_eth;
-  let commission;
-
-  //Get the price of NFT
-  const getAmt = "SELECT price_usd from nft_list where (token_id = ?);";
+  const commission = req.body.commission;
   let amount;
-  amount = await new Promise((resolve, error) => {
-    db.query(getAmt, [nft_id], (err, result) => {
-      amount = result[0].price_usd;
-      resolve(amount);
-    });
-  });
 
   if (com_type == "usd") {
+    //Get the USD price of NFT
+    const getAmt = "SELECT price_usd from nft_list where (token_id = ?);";
+    amount = await new Promise((resolve, error) => {
+      db.query(getAmt, [nft_id], (err, result) => {
+        amount = result[0].price_usd;
+        resolve(amount);
+      });
+    });
+
     //Update the balance of USD
     const updateBal =
-      "UPDATE login SET bal_usd = bal_usd - ? WHERE login_id = ?;";
-    db.query(updateBal, [amount, login_id], (err, result) => {
+      "UPDATE login SET bal_usd = bal_usd - ? - ? WHERE login_id = ?;";
+    db.query(updateBal, [amount, commission, login_id], (err, result) => {
       console.log(err);
     });
   } else {
-    //Decrement the commission
-  }
+    //Get the ETH price of NFT
+    const getAmt = "SELECT price_eth from nft_list where (token_id = ?);";
+    amount = await new Promise((resolve, error) => {
+      db.query(getAmt, [nft_id], (err, result) => {
+        amount = result[0].price_eth;
+        resolve(amount);
+      });
+    });
 
-  //Update the balance of Buyer
-  const balUpdate =
-    "UPDATE login SET bal_eth = bal_eth - ? - ? WHERE login_id = ?;";
-  db.query(balUpdate, [amount, 0], (err, result) => {
-    console.log(err);
-  });
+    //Update the balance of ETH
+    const updateBal =
+      "UPDATE login SET bal_eth = bal_eth - ? - ? WHERE login_id = ?;";
+    db.query(updateBal, [amount, commission, login_id], (err, result) => {
+      console.log(err);
+    });
+  }
 
   //Get the Seller ID
   const sellerId = "SELECT owner_id from nft_list where (token_id = ?);";
@@ -310,7 +304,7 @@ app.post("/nft/buy", async (req, res) => {
       "xxxx",
       new Date().toISOString().slice(0, 19).replace("T", " "),
       "Buy",
-      0,
+      commission,
       amount,
     ],
     (err, result) => {
