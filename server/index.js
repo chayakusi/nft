@@ -103,8 +103,8 @@ app.post("/api/updateETH", async (req, res) => {
     });
 
     const sqlUpdate1 =
-      "UPDATE login SET bal_usd = bal_usd - (convRate*?)   WHERE (email = ?);";
-    db.query(sqlUpdate1, [addEth, userEmail], (err, result) => {
+      "UPDATE login SET bal_usd = bal_usd - (?)   WHERE (email = ?);";
+    db.query(sqlUpdate1, [convRate * addEth, userEmail], (err, result) => {
       console.log(err);
     });
 

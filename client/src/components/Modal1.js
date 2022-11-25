@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 function Modal1({ setOpenModal }) {
   const { currentUser } = useAuth();
+  let errordata;
   const userEmail = currentUser.email;
   const [addEth, setAddEth] = useState("");
   const [convRate, setConvRate] = useState(0);
@@ -15,7 +16,7 @@ function Modal1({ setOpenModal }) {
         "https://api.coinbase.com/v2/prices/BTC-USD/buy"
       );
       setConvRate(parseInt(response.data.data.amount, 10));
-      console.log(convRate);
+      // console.log(convRate);
     };
 
     getConvRate();
@@ -26,12 +27,14 @@ function Modal1({ setOpenModal }) {
     if (addEth.length === 0) {
       alert("Enter correct value");
     } else {
-      axios.post("http://localhost:3001/api/updateETH", {
+      const error = axios.post("http://localhost:3001/api/updateETH", {
         userEmail: userEmail,
         addEth: addEth,
-        convRate: convRate
+        convRate: convRate,
       });
+
       alert("Successfully traded!!");
+
       setOpenModal(false);
     }
   };
