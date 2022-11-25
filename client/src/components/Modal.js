@@ -50,7 +50,7 @@ function Modal({ setOpenModal }) {
           />
         </div>
         <div className="footer">
-          <Button onClick={updateBalance}>Buy</Button>
+          <Button onClick={updateBalance}>Add</Button>
         </div>
       </div>
     </div>
