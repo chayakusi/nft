@@ -28,7 +28,7 @@ export default function User() {
           <div className="col-md-7">
             <div
               style={{ color: "white", backgroundColor: "transparent" }}
-              className=" card p-3 py-4"
+              className=" mcard p-3 py-4"
             >
               <div className="text-center">
                 <img

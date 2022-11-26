@@ -1,5 +1,5 @@
 
-.card{
+.mcard{
     box-shadow: -3px -3px 9px #aaa9a9a2,
     3px 3px 7px rgba(147, 149, 151, 0.671);
     margin-top: 50px;
@@ -11,7 +11,7 @@
    
 }
 
-.card:before{
+.mcard:before{
     
     content:"";
     position:absolute;
@@ -26,7 +26,7 @@
     transform-origin: bottom
 }
 
-.card:after{
+.mcard:after{
     
     content:"";
     position:absolute;
@@ -40,7 +40,7 @@
     transform-origin: bottom
 }
 
-.card:hover::after{
+.mcard:hover::after{
     transform:scaleY(1);
 }
 
