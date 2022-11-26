@@ -10,20 +10,19 @@ import axios from "axios";
 const initialState = {
   nft_name: "",
   nft_id: "",
-  com_type: "",
-  nft_price_usd: "",
-  nft_price_eth: "",
+  com_type: ""
 };
 
 export default function BuyNFT() {
   const [state, setState] = useState(initialState);
-  const { nft_name, nft_id, com_type, nft_price_usd, nft_price_eth } = state;
+  const { nft_name, nft_id, com_type } = state;
   const [userData, setUserData] = useState([]);
   const [NFTdata, setNFTData] = useState([]);
   const [commission, setCommission] = useState();
   const [convRate, setConvRate] = useState(0);
   const [bal_usd, setBalUSD] = useState(0);
   const [bal_eth, setBalEth] = useState(0);
+  const [price_eth, setPriceEth] = useState(0);
   const [login_id, setLoginId] = useState("");
   const [type, setType] = useState("");
   const { currentUser } = useAuth();
@@ -77,7 +76,10 @@ export default function BuyNFT() {
     e.preventDefault();
     let valid = false;
     NFTdata.forEach((item, index) => {
-      if (item.name === nft_name && item.token_id === nft_id) valid = true;
+      if (item.name === nft_name && item.token_id === nft_id) {
+        valid = true;
+        setPriceEth(item.price_eth);
+      }
     });
     if (!nft_name || !nft_id || !com_type || !valid) {
       alert("Check your values");
@@ -103,18 +105,14 @@ export default function BuyNFT() {
     NFTdata.forEach((item, index) => {
       if (item.name === nft_name && item.token_id === nft_id) {
         valid = true;
-        setState({
-          nft_price_usd: item.price_usd,
-          nft_price_eth: item.price_eth,
-        });
       }
     });
     if (!nft_name || !nft_id || !com_type || !valid) {
       alert("Check your values");
     } else {
       if (
-        (com_type === "usd" && bal_usd < nft_price_usd + commission) ||
-        (com_type === "eth" && bal_eth < nft_price_eth + commission)
+        (com_type === "usd" && bal_usd < price_eth*convRate + commission) ||
+        (com_type === "eth" && bal_eth < price_eth + commission)
       ) {
         alert("Balance is insufficient to proceed");
       } else {
