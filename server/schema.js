@@ -1,11 +1,25 @@
-var mysql = require("mysql2");
+var mysql = require("mysql");
 
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Chaya@sql123",
+  password: "tanmay",
   database: "mydb",
 });
+
+var ethers = require("ethers");
+var crypto = require("crypto");
+const { resolve } = require("path");
+var id1 = crypto.randomBytes(32).toString("hex");
+var id2 = crypto.randomBytes(32).toString("hex");
+var id3 = crypto.randomBytes(32).toString("hex");
+var id4 = crypto.randomBytes(32).toString("hex");
+var id5 = crypto.randomBytes(32).toString("hex");
+var privateKey1 = "0x" + id1;
+var privateKey2 = "0x" + id2;
+var privateKey3 = "0x" + id3;
+var privateKey4 = "0x" + id4;
+var privateKey5 = "0x" + id5;
 
 con.connect(function (err) {
   if (err) throw err;
@@ -36,28 +50,32 @@ con.connect(function (err) {
     console.log("Trans Table created");
   });
 
-  var nftInsert1 = "INSERT INTO nft_list VALUES ('A',1,100,1,1,1,1)";
-  con.query(nftInsert1, function (err, result) {
+  var nftInsert1 =
+    "INSERT INTO nft_list VALUES ('SpiderMonkey',1,100,?,3000,3,1)";
+  con.query(nftInsert1, [privateKey1], function (err, result) {
     console.log("Record inserted");
   });
 
-  var nftInsert2 = "INSERT INTO nft_list VALUES ('B',2,100,2,2,1,1)";
-  con.query(nftInsert2, function (err, result) {
+  var nftInsert2 = "INSERT INTO nft_list VALUES ('IronMan',2,100,?,5500,5,1)";
+  con.query(nftInsert2, [privateKey2], function (err, result) {
     console.log("Record inserted");
   });
 
-  var nftInsert3 = "INSERT INTO nft_list VALUES ('C',3,100,3,3,1,1)";
-  con.query(nftInsert3, function (err, result) {
+  var nftInsert3 =
+    "INSERT INTO nft_list VALUES ('GreenPepper',3,100,?,3200,2,1)";
+  con.query(nftInsert3, [privateKey3], function (err, result) {
     console.log("Record inserted");
   });
 
-  var nftInsert4 = "INSERT INTO nft_list VALUES ('D',4,100,4,4,1,1)";
-  con.query(nftInsert4, function (err, result) {
+  var nftInsert4 =
+    "INSERT INTO nft_list VALUES ('WaterNebula',4,100,?,4500,4,1)";
+  con.query(nftInsert4, [privateKey4], function (err, result) {
     console.log("Record inserted");
   });
 
-  var nftInsert5 = "INSERT INTO nft_list VALUES ('E',5,100,5,5,1,1)";
-  con.query(nftInsert5, function (err, result) {
+  var nftInsert5 =
+    "INSERT INTO nft_list VALUES ('SteelThrone',5,100,?,5000,5,1)";
+  con.query(nftInsert5, [privateKey5], function (err, result) {
     console.log("Record inserted");
   });
 });

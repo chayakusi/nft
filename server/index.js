@@ -7,8 +7,6 @@ const mysql = require("mysql");
 var ethers = require("ethers");
 var crypto = require("crypto");
 const { resolve } = require("path");
-var id = crypto.randomBytes(32).toString("hex");
-var privateKey = "0x" + id;
 
 const db = mysql.createPool({
   host: "localhost",
@@ -26,6 +24,36 @@ app.get("/api/login", (req, res) => {
   db.query(sqlSelect, (err, result) => {
     res.send(result);
   });
+});
+
+app.post("/api/addNFT", async (req, res) => {
+  const userEmail = req.body.userEmail;
+  const nftname = req.body.nftname;
+  const nftprice = req.body.nftprice;
+  const convRate = req.body.convRate;
+  let priceusd = nftprice * convRate;
+  var id = crypto.randomBytes(32).toString("hex");
+  var privateKey = "0x" + id;
+
+  // Get the max Token Id
+  const getTokenId = "SELECT max(token_id) as token_id from nft_list;";
+  let t;
+  t = await new Promise((resolve, error) => {
+    db.query(getTokenId, (err, result) => {
+      t = result[0].token_id;
+      resolve(t);
+    });
+  });
+  t = Number(t) + 1;
+  //Add the NFT
+  const sqlAdd = "INSERT INTO nft_list VALUES (?,?,100,?,?,?,1);";
+  db.query(
+    sqlAdd,
+    [nftname, t, privateKey, priceusd, nftprice],
+    (err, result) => {
+      console.log(err);
+    }
+  );
 });
 
 app.post("/api/updateBal", async (req, res) => {
@@ -150,8 +178,11 @@ app.post("/api/insert", (req, res) => {
   const city = req.body.city;
   const state = req.body.state;
   const zip = req.body.zip;
-  const type = "GOLD";
+  const type = "SILVER";
   const balance = req.body.balance;
+
+  var id = crypto.randomBytes(32).toString("hex");
+  var privateKey = "0x" + id;
 
   const sqlInsert =
     "INSERT INTO login (email,password,first_name,last_name,address,phone,cell_phone,city,state,zip,type,eth_adr,bal_usd,bal_eth) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?);";

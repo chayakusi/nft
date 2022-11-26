@@ -71,6 +71,7 @@ export default function BuyNFT() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setState({ ...state, [name]: value });
+    setCommission();
   };
   const handleCheck = async (e) => {
     e.preventDefault();
@@ -81,7 +82,7 @@ export default function BuyNFT() {
     if (!nft_name || !nft_id || !com_type || !valid) {
       alert("Check your values");
     } else {
-      if (com_type == "usd") {
+      if (com_type === "usd") {
         getConvRate();
       }
       const response = await Axios.post("http://localhost:3001/nft/check", {
@@ -231,7 +232,11 @@ export default function BuyNFT() {
                 </div>
                 <div>
                   Commission Rate is {Math.round(commission * 100) / 100}{" "}
-                  {com_type === "eth" ? "ETH" : "USD"}
+                  {commission !== ""
+                    ? com_type === "eth"
+                      ? "ETH"
+                      : "USD"
+                    : ""}
                 </div>
               </div>
               <div className=" d-flex justify-content-center align-items-center">
