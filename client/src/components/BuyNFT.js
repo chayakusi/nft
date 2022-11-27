@@ -95,13 +95,12 @@ export default function BuyNFT() {
         type: type,
         conv_rate: convRate,
       });
-      setCommission(response.data[0].comm);
+      setCommission(parseInt(response.data[0].comm, 10));
     }
   };
   const handleBuy = (e) => {
     e.preventDefault();
     let valid = false;
-    console.log(nft_name, nft_id);
     NFTdata.forEach((item, index) => {
       if (item.name === nft_name && item.token_id === nft_id) {
         valid = true;
