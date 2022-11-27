@@ -10,7 +10,7 @@ import axios from "axios";
 const initialState = {
   nft_name: "",
   nft_id: "",
-  com_type: ""
+  com_type: "",
 };
 
 export default function BuyNFT() {
@@ -111,7 +111,7 @@ export default function BuyNFT() {
       alert("Check your values");
     } else {
       if (
-        (com_type === "usd" && bal_usd < price_eth*convRate + commission) ||
+        (com_type === "usd" && bal_usd < price_eth * convRate + commission) ||
         (com_type === "eth" && bal_eth < price_eth + commission)
       ) {
         alert("Balance is insufficient to proceed");
@@ -154,8 +154,8 @@ export default function BuyNFT() {
                 <tr>
                   <th>Name</th>
                   <th>Token ID</th>
-                  <th>Price USD</th>
-                  <th>Price ETH</th>
+
+                  <th>Price(ETH)</th>
                 </tr>
               </thead>
               <tbody>
@@ -164,7 +164,7 @@ export default function BuyNFT() {
                     <tr>
                       <td>{item.name}</td>
                       <td>{item.token_id}</td>
-                      <td>{item.price_usd}</td>
+
                       <td>{item.price_eth}</td>
                     </tr>
                   );

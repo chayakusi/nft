@@ -78,7 +78,7 @@ app.post("/api/updateBal", async (req, res) => {
   });
 
   //Log this transaction
-  const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?);";
+  const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?,?);";
   db.query(
     transaction,
     [
@@ -88,9 +88,10 @@ app.post("/api/updateBal", async (req, res) => {
       null,
       "xxxx",
       new Date().toISOString().slice(0, 19).replace("T", " "),
-      "Added Money",
+      "xxxx",
       0,
       addMoney,
+      "Added Money",
     ],
     (err, result) => {
       console.log(err);
@@ -137,10 +138,21 @@ app.post("/api/updateETH", async (req, res) => {
     });
     let date_time = new Date().toISOString().slice(0, 19).replace("T", " ");
     //Log this transaction
-    const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?);";
+    const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?,?);";
     db.query(
       transaction,
-      [0, login_id, null, null, "xxxx", date_time, "Added ETH", 0, addEth],
+      [
+        0,
+        login_id,
+        null,
+        null,
+        "xxxx",
+        date_time,
+        "xxxx",
+        0,
+        addEth,
+        "Add ETH",
+      ],
       (err, result) => {
         console.log(err);
       }
@@ -322,9 +334,16 @@ app.post("/nft/buy", async (req, res) => {
   db.query(sqlUpdate, [nft_id], (err, result) => {
     console.log(err);
   });
-
+  //Get the nft addr of NFT
+  const getNftAddr = "SELECT nft_ethadr from nft_list where (token_id = ?);";
+  nftaddr = await new Promise((resolve, error) => {
+    db.query(getNftAddr, [nft_id], (err, result) => {
+      nftaddr = result[0].nft_ethadr;
+      resolve(nftaddr);
+    });
+  });
   //Log this transaction
-  const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?);";
+  const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?,?);";
   db.query(
     transaction,
     [
@@ -332,11 +351,12 @@ app.post("/nft/buy", async (req, res) => {
       login_id,
       seller_id,
       nft_id,
-      "xxxx",
+      nftaddr,
       new Date().toISOString().slice(0, 19).replace("T", " "),
-      "Buy",
+      com_type,
       commission,
       amount,
+      "Buy",
     ],
     (err, result) => {
       console.log(err);
@@ -450,9 +470,16 @@ app.post("/nft/sell", async (req, res) => {
       resolve(amount);
     });
   });
-
+  //Get the nft addr of NFT
+  const getNftAddr = "SELECT nft_ethadr from nft_list where (token_id = ?);";
+  nftaddr = await new Promise((resolve, error) => {
+    db.query(getNftAddr, [nft_id], (err, result) => {
+      nftaddr = result[0].nft_ethadr;
+      resolve(nftaddr);
+    });
+  });
   //Log this transaction
-  const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?);";
+  const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?,?);";
   db.query(
     transaction,
     [
@@ -460,11 +487,12 @@ app.post("/nft/sell", async (req, res) => {
       null,
       login_id,
       nft_id,
-      "xxxx",
+      nftaddr,
       new Date().toISOString().slice(0, 19).replace("T", " "),
-      "Posted",
+      "xxxx",
       0,
       amount,
+      "Posted",
     ],
     (err, result) => {
       console.log(err);

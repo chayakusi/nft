@@ -29,7 +29,7 @@ con.connect(function (err) {
   var nftTable =
     "CREATE TABLE nft_list (name varchar(45) DEFAULT NULL,token_id varchar(100) NOT NULL, owner_id int DEFAULT 0, nft_ethadr varchar(100) NOT NULL,price_usd int DEFAULT NULL,price_eth int DEFAULT NULL,is_avl int NOT NULL,PRIMARY KEY (token_id),CONSTRAINT owner FOREIGN KEY (owner_id) REFERENCES login (login_id));";
   var transTable =
-    "CREATE TABLE trans (trans_id int NOT NULL AUTO_INCREMENT,buyer_id int DEFAULT NULL,seller_id int DEFAULT NULL,token_id varchar(100) DEFAULT NULL,nft_addr varchar(100) NOT NULL,date datetime DEFAULT NULL,com_type varchar(45) DEFAULT NULL,com_paid int DEFAULT NULL,value int DEFAULT NULL,PRIMARY KEY (trans_id),KEY buyer_idx (buyer_id),KEY seller_idx (seller_id),KEY nfttoken_idx (token_id),CONSTRAINT buyer FOREIGN KEY (buyer_id) REFERENCES login (login_id),CONSTRAINT nfttoken FOREIGN KEY (token_id) REFERENCES nft_list (token_id),CONSTRAINT seller FOREIGN KEY (seller_id) REFERENCES login (login_id));";
+    "CREATE TABLE trans (trans_id int NOT NULL AUTO_INCREMENT,buyer_id int DEFAULT NULL,seller_id int DEFAULT NULL,token_id varchar(100) DEFAULT NULL,nft_addr varchar(100) NOT NULL,date datetime DEFAULT NULL,com_type varchar(45) DEFAULT NULL,com_paid int DEFAULT NULL,value int DEFAULT NULL,status varchar(45) DEFAULT NULL,PRIMARY KEY (trans_id),KEY buyer_idx (buyer_id),KEY seller_idx (seller_id),KEY nfttoken_idx (token_id),CONSTRAINT buyer FOREIGN KEY (buyer_id) REFERENCES login (login_id),CONSTRAINT nfttoken FOREIGN KEY (token_id) REFERENCES nft_list (token_id),CONSTRAINT seller FOREIGN KEY (seller_id) REFERENCES login (login_id));";
 
   con.query(loginTable, function (err, result) {
     console.log("Login Table created");
@@ -78,4 +78,8 @@ con.connect(function (err) {
   con.query(nftInsert5, [privateKey5], function (err, result) {
     console.log("Record inserted");
   });
+
+  console.log(
+    "Completed!! You can close this terminal and proceed with the next steps."
+  );
 });

@@ -43,6 +43,7 @@ export default function Trans() {
                 <th>Type</th>
                 <th>Commision</th>
                 <th>Value</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -57,6 +58,7 @@ export default function Trans() {
                     <td>{item.com_type}</td>
                     <td>{item.com_paid}</td>
                     <td>{item.value}</td>
+                    <td>{item.status}</td>
                   </tr>
                 );
               })}

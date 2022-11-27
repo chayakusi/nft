@@ -80,8 +80,8 @@ export default function SellNFT() {
                 <tr>
                   <th>Name</th>
                   <th>Token ID</th>
-                  <th>Price USD</th>
-                  <th>Price ETH</th>
+
+                  <th>Price(ETH)</th>
                 </tr>
               </thead>
               <tbody>
@@ -90,7 +90,7 @@ export default function SellNFT() {
                     <tr>
                       <td>{item.name}</td>
                       <td>{item.token_id}</td>
-                      <td>{item.price_usd}</td>
+
                       <td>{item.price_eth}</td>
                     </tr>
                   );

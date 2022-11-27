@@ -6,15 +6,21 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function ManDash() {
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [error, setError] = useState("");
   const { currentUser, logout } = useAuth();
   const [manData, setManData] = useState([]);
   const [loginData, setLoginData] = useState([]);
   const [manname, setManName] = useState("");
   const loadManTrans = async () => {
-    const response = await axios.get("http://localhost:3001/man/trans");
+    const response = await axios.post("http://localhost:3001/man/trans", {
+      startDate: startDate,
+      endDate: endDate,
+    });
     setManData(response.data);
   };
+
   const loadLogin = async () => {
     const response = await axios.get("http://localhost:3001/api/login");
     setLoginData(response.data);
@@ -25,11 +31,11 @@ export default function ManDash() {
   };
 
   useEffect(() => {
-    loadManTrans();
-  }, []);
-  useEffect(() => {
     loadLogin();
   });
+  // useEffect(() => {
+  //   loadManTrans();
+  // },);
 
   return (
     <>
@@ -42,6 +48,30 @@ export default function ManDash() {
       >
         <h1>Hello,&nbsp;</h1>
         <h1> {manname}&nbsp;</h1>
+      </div>
+      <div style={{ color: "white", marginLeft: "50px" }}>
+        <h5>Filter by date:</h5>
+        {/* <label for="start">Start date:</label> */}
+        <input
+          onChange={(e) => {
+            setStartDate(e.target.value);
+          }}
+          type="date"
+          id="startDate"
+          name="startDate"
+        />{" "}
+        &nbsp;- &nbsp;
+        <input
+          onChange={(e) => {
+            setEndDate(e.target.value);
+          }}
+          type="date"
+          id="endDate"
+          name="endDate"
+        />
+        <Button style={{ marginLeft: "10px" }} onClick={loadManTrans}>
+          Filter
+        </Button>
       </div>
       <div>
         <div className="d-flex justify-content-center align-items-center flex-column">

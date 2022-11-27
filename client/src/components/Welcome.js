@@ -144,8 +144,8 @@ export default function Welcome() {
               <thead>
                 <tr>
                   <th>Name</th>
-                  <th>Price USD</th>
-                  <th>Price ETH</th>
+                  <th>Token ID</th>
+                  <th>Price(ETH)</th>
                 </tr>
               </thead>
               <tbody>
@@ -153,7 +153,7 @@ export default function Welcome() {
                   return (
                     <tr>
                       <td>{item.name}</td>
-                      <td>{item.price_usd}</td>
+                      <td>{item.token_id}</td>
                       <td>{item.price_eth}</td>
                     </tr>
                   );
