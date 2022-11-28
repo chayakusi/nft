@@ -10,7 +10,7 @@ function Modal({ setOpenModal }) {
 
   const updateBalance = (e) => {
     e.preventDefault();
-    if (addMoney.length === 0) {
+    if (addMoney <= 0) {
       alert("Enter correct value");
     } else {
       axios.post("http://localhost:3001/api/updateBal", {
@@ -45,7 +45,6 @@ function Modal({ setOpenModal }) {
             }}
             type="number"
             min="1"
-            max="100"
             required
           />
         </div>

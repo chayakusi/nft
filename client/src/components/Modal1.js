@@ -5,10 +5,19 @@ import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 function Modal1({ setOpenModal }) {
   const { currentUser } = useAuth();
-  let errordata;
   const userEmail = currentUser.email;
   const [addEth, setAddEth] = useState("");
   const [convRate, setConvRate] = useState(0);
+  const [currbalanceusd, setCurrBalanceUSD] = useState("");
+  const [userLogin, setUserLogin] = useState([]);
+
+  const loadUserData = async () => {
+    const response = await axios.post("http://localhost:3001/user", {
+      userEmail: userEmail,
+    });
+    setUserLogin(response.data);
+    setCurrBalanceUSD(userLogin[0].bal_usd);
+  };
 
   useEffect(() => {
     const getConvRate = async () => {
@@ -21,13 +30,18 @@ function Modal1({ setOpenModal }) {
 
     getConvRate();
   }, []);
+  useEffect(() => {
+    loadUserData();
+  });
 
   const updateETH = (e) => {
     e.preventDefault();
-    if (addEth.length === 0) {
+    if (addEth <= 0) {
       alert("Enter correct value");
+    } else if (currbalanceusd < convRate * addEth) {
+      alert("Not enough balance!!");
     } else {
-      const error = axios.post("http://localhost:3001/api/updateETH", {
+      axios.post("http://localhost:3001/api/updateETH", {
         userEmail: userEmail,
         addEth: addEth,
         convRate: convRate,

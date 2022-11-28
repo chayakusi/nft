@@ -416,14 +416,20 @@ app.post("/trans", async (req, res) => {
   );
 });
 
-app.get("/man/trans", (req, res) => {
-  db.query("SELECT * FROM trans;", (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send(result);
+app.post("/man/trans", (req, res) => {
+  const startDate = req.body.startDate;
+  const endDate = req.body.endDate;
+  db.query(
+    "SELECT * FROM trans where date >= ? and date <= ?;",
+    [startDate, endDate],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
     }
-  });
+  );
 });
 
 app.post("/nft", async (req, res) => {
