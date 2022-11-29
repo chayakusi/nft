@@ -10,6 +10,7 @@ export default function Trans() {
   const [transData, setTransData] = useState([]);
   const { currentUser } = useAuth();
   const userEmail = currentUser.email;
+  const [convRate, setConvRate] = useState(0);
   const loadTrans = async () => {
     const response = await axios.post("http://localhost:3001/trans", {
       userEmail: userEmail,
@@ -17,9 +18,36 @@ export default function Trans() {
     setTransData(response.data);
   };
 
+  const getConvRate = async () => {
+    const response = await axios.get(
+      "https://api.coinbase.com/v2/prices/BTC-USD/buy"
+    );
+    setConvRate(parseInt(response.data.data.amount, 10));
+   
+  };
+  useEffect(() => {
+    getConvRate();
+  }, []);
   useEffect(() => {
     loadTrans();
-  });
+  }, []);
+
+  const handleCancel = async (trans_id, buyer_id, seller_id, token_id, com_type, com_paid, value, status) => {
+    console.log("nahdlecancel");
+    let filtered = transData.filter((data) => data.trans_id != trans_id);
+    setTransData(filtered);
+    await axios.post("http://localhost:3001/cancel", {
+      trans_id,
+      buyer_id,
+      seller_id,
+      token_id,
+      com_type,
+      com_paid,
+      value,
+      status,
+      convRate
+    });
+  }
 
   return (
     <>
@@ -49,7 +77,7 @@ export default function Trans() {
             <tbody>
               {transData.map((item, index) => {
                 return (
-                  <tr>
+                  <tr key={item.trans_id}>
                     <td>{item.buyer_id}</td>
                     <td>{item.seller_id}</td>
                     <td>{item.token_id}</td>
@@ -59,6 +87,11 @@ export default function Trans() {
                     <td>{item.com_paid}</td>
                     <td>{item.value}</td>
                     <td>{item.status}</td>
+                    <td>{Math.abs(new Date() - new Date(item.date)) / (1000 * 60) < 15 && 
+                    <Button onClick={() => {
+                      handleCancel(item.trans_id, item.buyer_id, item.seller_id, item.token_id, item.com_type, item.com_paid, item.value, item.status)
+                    }}>Cancel
+                    </Button>}</td>
                   </tr>
                 );
               })}

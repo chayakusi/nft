@@ -48,7 +48,6 @@ export default function BuyNFT() {
       "https://api.coinbase.com/v2/prices/BTC-USD/buy"
     );
     setConvRate(parseInt(response.data.data.amount, 10));
-    console.log(convRate);
   };
 
   const loadNFT = async () => {
@@ -121,6 +120,7 @@ export default function BuyNFT() {
           com_type: com_type,
           login_id: login_id,
           commission: commission,
+          conv_rate: convRate
         }).then(() => {
           setState({ nft_name: "", nft_id: "", com_type: "" });
         });
