@@ -433,8 +433,16 @@ app.post("/man/trans", (req, res) => {
 });
 
 app.post("/nft", async (req, res) => {
-  const login_id = req.body.login_id;
-
+  const userEmail = req.body.userEmail;
+  // Get the id of buyer
+  const getLoginID = "SELECT login_id from login WHERE email = ?;";
+  let login_id;
+  login_id = await new Promise((resolve, error) => {
+    db.query(getLoginID, [userEmail], (err, result) => {
+      login_id = result[0].login_id;
+      resolve(login_id);
+    });
+  });
   db.query(
     "SELECT name,token_id,price_usd,price_eth FROM nft_list where is_avl=1 and owner_id <> ?;",
     [login_id],

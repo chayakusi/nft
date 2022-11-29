@@ -53,7 +53,7 @@ export default function BuyNFT() {
 
   const loadNFT = async () => {
     const response = await Axios.post("http://localhost:3001/nft", {
-      login_id: login_id,
+      userEmail: userEmail,
     });
     setNFTData(response.data);
   };
