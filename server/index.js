@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
 var ethers = require("ethers");
 var crypto = require("crypto");
@@ -11,8 +11,8 @@ const { resolve } = require("path");
 const db = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "tanmay",
-  database: "mydb",
+  password: "Chaya@sql123",
+  database: "mydb"
 });
 
 app.use(cors());
@@ -46,15 +46,122 @@ app.post("/api/addNFT", async (req, res) => {
   });
   t = Number(t) + 1;
   //Add the NFT
-  const sqlAdd = "INSERT INTO nft_list VALUES (?,?,100,?,?,?,1);";
+  const sqlAdd = "INSERT INTO nft_list VALUES (?,?,100,?,?,1);";
   db.query(
     sqlAdd,
-    [nftname, t, privateKey, priceusd, nftprice],
+    [nftname, t, privateKey, nftprice],
     (err, result) => {
       console.log(err);
     }
   );
 });
+
+app.post("/cancel", (req, res) => {
+  const trans_id = req.body.trans_id;
+  const buyer_id = req.body.buyer_id;
+  const seller_id = req.body.seller_id;
+  const nft_id = req.body.token_id;
+  const com_type = req.body.com_type;
+  const com_paid = req.body.com_paid;
+  const value = req.body.value;
+  const status = req.body.status;
+  const convRate = req.body.convRate;
+console.log(status);
+  if(status == "Added Money") {
+    const updateBal = "UPDATE login SET bal_usd = bal_usd - ? WHERE login_id = ?;";
+    db.query(
+      updateBal,
+      [value, buyer_id],
+      (err, result) => {
+        console.log(err);
+      }
+    );
+  } else if(status == "Add ETH") {
+    const updateBal = "UPDATE login SET bal_eth = bal_eth - ? WHERE login_id = ?;";
+    db.query(
+      updateBal,
+      [value, buyer_id],
+      (err, result) => {
+        console.log(err);
+      }
+    );
+    const updateBalUSD = "UPDATE login SET bal_usd = bal_usd + ? WHERE login_id = ?;";
+    db.query(
+      updateBalUSD,
+      [value * convRate, buyer_id],
+      (err, result) => {
+        console.log(err);
+      }
+    );
+  } else if(status === "Buy") {
+    //Update balance of buyer
+    if(com_type == "usd") {
+      const updateBal = "UPDATE login SET bal_usd = bal_usd + ? WHERE login_id = ?;";
+      db.query(
+        updateBal,
+        [value + com_paid, buyer_id],
+        (err, result) => {
+          console.log(result);
+          console.log(err);
+        }
+      );
+    } else {
+      console.log("Buy ETH");
+      const updateBal = "UPDATE login SET bal_eth = bal_eth + ? WHERE login_id = ?;";
+      db.query(
+        updateBal,
+        [value + com_paid, buyer_id],
+        (err, result) => {
+          console.log(err);
+        }
+      );
+    }
+    //Update balance of Seller
+    const updateBal = "UPDATE login SET bal_usd = bal_usd - ? WHERE login_id = ?;";
+    db.query(
+      updateBal,
+      [value, seller_id],
+      (err, result) => {
+        console.log(err);
+      }
+    );
+    //Update owner of NFT and make it available
+    const updateOwner = "UPDATE nft_list SET owner_id = ? WHERE token_id = ?;";
+    db.query(
+      updateOwner,
+      [seller_id, nft_id],
+      (err, result) => {
+        console.log(err);
+      }
+    );
+    const makeAvailable = "UPDATE nft_list SET is_avl = 1 WHERE token_id = ?;";
+    db.query(
+      makeAvailable,
+      [nft_id],
+      (err, result) => {
+        console.log(err);
+      }
+    );
+  } else {
+    // Cancel Sell operation
+    const cancelSell = "UPDATE nft_list SET is_avl = 0 WHERE token_id = ?;";
+    db.query(
+      cancelSell,
+      [nft_id],
+      (err, result) => {
+        console.log(err);
+      }
+    );
+  }
+  const delTrans = "DELETE FROM trans WHERE trans_id = ?;";
+  db.query(
+    delTrans,
+    [trans_id],
+    (err, result) => {
+      console.log(err);
+    }
+  );
+})
 
 app.post("/api/updateBal", async (req, res) => {
   const userEmail = req.body.userEmail;
@@ -76,7 +183,8 @@ app.post("/api/updateBal", async (req, res) => {
   db.query(sqlUpdate, [addMoney, userEmail], (err, result) => {
     console.log(err);
   });
-
+  var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+  var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
   //Log this transaction
   const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?,?);";
   db.query(
@@ -87,7 +195,7 @@ app.post("/api/updateBal", async (req, res) => {
       null,
       null,
       "xxxx",
-      new Date().toISOString().slice(0, 19).replace("T", " "),
+      localISOTime,
       "xxxx",
       0,
       addMoney,
@@ -136,7 +244,9 @@ app.post("/api/updateETH", async (req, res) => {
     db.query(sqlUpdate1, [convRate, addEth, userEmail], (err, result) => {
       console.log(err);
     });
-    let date_time = new Date().toISOString().slice(0, 19).replace("T", " ");
+    
+  var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+  var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
     //Log this transaction
     const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?,?);";
     db.query(
@@ -147,7 +257,7 @@ app.post("/api/updateETH", async (req, res) => {
         null,
         null,
         "xxxx",
-        date_time,
+        localISOTime,
         "xxxx",
         0,
         addEth,
@@ -270,34 +380,27 @@ app.post("/nft/buy", async (req, res) => {
   const com_type = req.body.com_type;
   const login_id = req.body.login_id;
   const commission = req.body.commission;
+  const conv_rate = req.body.conv_rate;
   let amount;
 
-  if (com_type == "usd") {
-    //Get the USD price of NFT
-    const getAmt = "SELECT price_usd from nft_list where (token_id = ?);";
-    amount = await new Promise((resolve, error) => {
-      db.query(getAmt, [nft_id], (err, result) => {
-        amount = result[0].price_usd;
-        resolve(amount);
-      });
+  //Get the ETH price of NFT
+  const getAmt = "SELECT price_eth from nft_list where (token_id = ?);";
+  amount = await new Promise((resolve, error) => {
+    db.query(getAmt, [nft_id], (err, result) => {
+      amount = result[0].price_eth;
+      resolve(amount);
     });
+  });
 
+  if (com_type == "usd") {
     //Update the balance of USD
+    amount = amount * conv_rate;
     const updateBal =
       "UPDATE login SET bal_usd = bal_usd - ? - ? WHERE login_id = ?;";
     db.query(updateBal, [amount, commission, login_id], (err, result) => {
       console.log(err);
     });
   } else {
-    //Get the ETH price of NFT
-    const getAmt = "SELECT price_eth from nft_list where (token_id = ?);";
-    amount = await new Promise((resolve, error) => {
-      db.query(getAmt, [nft_id], (err, result) => {
-        amount = result[0].price_eth;
-        resolve(amount);
-      });
-    });
-
     //Update the balance of ETH
     const updateBal =
       "UPDATE login SET bal_eth = bal_eth - ? - ? WHERE login_id = ?;";
@@ -342,6 +445,8 @@ app.post("/nft/buy", async (req, res) => {
       resolve(nftaddr);
     });
   });
+  var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+  var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
   //Log this transaction
   const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?,?);";
   db.query(
@@ -352,7 +457,7 @@ app.post("/nft/buy", async (req, res) => {
       seller_id,
       nft_id,
       nftaddr,
-      new Date().toISOString().slice(0, 19).replace("T", " "),
+      localISOTime,
       com_type,
       commission,
       amount,
@@ -378,7 +483,7 @@ app.post("/nft/get", async (req, res) => {
   });
 
   db.query(
-    "SELECT token_id,name,price_usd,price_eth FROM nft_list where owner_id=?;",
+    "SELECT token_id,name,price_eth FROM nft_list where owner_id=?;",
     [login_id],
     (err, result) => {
       if (err) {
@@ -444,7 +549,7 @@ app.post("/nft", async (req, res) => {
     });
   });
   db.query(
-    "SELECT name,token_id,price_usd,price_eth FROM nft_list where is_avl=1 and owner_id <> ?;",
+    "SELECT name,token_id,price_eth FROM nft_list where is_avl=1 and owner_id <> ?;",
     [login_id],
     (err, result) => {
       if (err) {
@@ -476,11 +581,11 @@ app.post("/nft/sell", async (req, res) => {
   });
 
   //Get the price of NFT
-  const getAmt = "SELECT price_usd from nft_list where (token_id = ?);";
+  const getAmt = "SELECT price_eth from nft_list where (token_id = ?);";
   let amount;
   amount = await new Promise((resolve, error) => {
     db.query(getAmt, [nft_id], (err, result) => {
-      amount = result[0].price_usd;
+      amount = result[0].price_eth;
       resolve(amount);
     });
   });
@@ -492,6 +597,8 @@ app.post("/nft/sell", async (req, res) => {
       resolve(nftaddr);
     });
   });
+  var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+  var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
   //Log this transaction
   const transaction = "INSERT INTO trans VALUES (?,?,?,?,?,?,?,?,?,?);";
   db.query(
@@ -502,7 +609,7 @@ app.post("/nft/sell", async (req, res) => {
       login_id,
       nft_id,
       nftaddr,
-      new Date().toISOString().slice(0, 19).replace("T", " "),
+      localISOTime,
       "xxxx",
       0,
       amount,

@@ -44,15 +44,15 @@ export default function Welcome() {
   };
   useEffect(() => {
     loadLogin();
-  });
+  }, [loginData]);
 
   useEffect(() => {
     loadNFT();
-  });
+  }, [NFTdata]);
 
   useEffect(() => {
     loadBalance();
-  });
+  }, [userLogin]);
 
   return (
     <>
