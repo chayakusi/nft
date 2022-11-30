@@ -23,7 +23,6 @@ export default function Trans() {
       "https://api.coinbase.com/v2/prices/BTC-USD/buy"
     );
     setConvRate(parseInt(response.data.data.amount, 10));
-   
   };
   useEffect(() => {
     getConvRate();
@@ -32,9 +31,18 @@ export default function Trans() {
     loadTrans();
   }, []);
 
-  const handleCancel = async (trans_id, buyer_id, seller_id, token_id, com_type, com_paid, value, status) => {
+  const handleCancel = async (
+    trans_id,
+    buyer_id,
+    seller_id,
+    token_id,
+    com_type,
+    com_paid,
+    value,
+    status
+  ) => {
     console.log("nahdlecancel");
-    let filtered = transData.filter((data) => data.trans_id != trans_id);
+    let filtered = transData.filter((data) => data.trans_id !== trans_id);
     setTransData(filtered);
     await axios.post("http://localhost:3001/cancel", {
       trans_id,
@@ -45,9 +53,9 @@ export default function Trans() {
       com_paid,
       value,
       status,
-      convRate
+      convRate,
     });
-  }
+  };
 
   return (
     <>
@@ -87,11 +95,28 @@ export default function Trans() {
                     <td>{item.com_paid}</td>
                     <td>{item.value}</td>
                     <td>{item.status}</td>
-                    <td>{Math.abs(new Date() - new Date(item.date)) / (1000 * 60) < 15 && 
-                    <Button onClick={() => {
-                      handleCancel(item.trans_id, item.buyer_id, item.seller_id, item.token_id, item.com_type, item.com_paid, item.value, item.status)
-                    }}>Cancel
-                    </Button>}</td>
+                    <td>
+                      {Math.abs(new Date() - new Date(item.date)) /
+                        (1000 * 60) <
+                        15 && (
+                        <Button
+                          onClick={() => {
+                            handleCancel(
+                              item.trans_id,
+                              item.buyer_id,
+                              item.seller_id,
+                              item.token_id,
+                              item.com_type,
+                              item.com_paid,
+                              item.value,
+                              item.status
+                            );
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      )}
+                    </td>
                   </tr>
                 );
               })}

@@ -14,6 +14,7 @@ export default function Welcome() {
   const { currentUser } = useAuth();
   const [NFTdata, setNFTData] = useState([]);
   const [userLogin, setUserLogin] = useState([]);
+
   const [loginData, setLoginData] = useState([]);
   const [username, setUserName] = useState("");
   const [type, setType] = useState("");
@@ -42,17 +43,18 @@ export default function Welcome() {
     });
     setUserLogin(response.data);
   };
+
   useEffect(() => {
     loadLogin();
-  }, [loginData]);
+  });
 
   useEffect(() => {
     loadNFT();
-  }, [NFTdata]);
+  });
 
   useEffect(() => {
     loadBalance();
-  }, [userLogin]);
+  });
 
   return (
     <>

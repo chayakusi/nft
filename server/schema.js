@@ -1,9 +1,9 @@
-var mysql = require("mysql2");
+var mysql = require("mysql");
 
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Chaya@sql123",
+  password: "tanmay",
   database: "mydb",
 });
 
@@ -50,8 +50,7 @@ con.connect(function (err) {
     console.log("Trans Table created");
   });
 
-  var nftInsert1 =
-    "INSERT INTO nft_list VALUES ('SpiderMonkey',1,100,?,3,1)";
+  var nftInsert1 = "INSERT INTO nft_list VALUES ('SpiderMonkey',1,100,?,3,1)";
   con.query(nftInsert1, [privateKey1], function (err, result) {
     console.log("Record inserted");
   });
@@ -61,20 +60,17 @@ con.connect(function (err) {
     console.log("Record inserted");
   });
 
-  var nftInsert3 =
-    "INSERT INTO nft_list VALUES ('GreenPepper',3,100,?,2,1)";
+  var nftInsert3 = "INSERT INTO nft_list VALUES ('GreenPepper',3,100,?,2,1)";
   con.query(nftInsert3, [privateKey3], function (err, result) {
     console.log("Record inserted");
   });
 
-  var nftInsert4 =
-    "INSERT INTO nft_list VALUES ('WaterNebula',4,100,?,4,1)";
+  var nftInsert4 = "INSERT INTO nft_list VALUES ('WaterNebula',4,100,?,4,1)";
   con.query(nftInsert4, [privateKey4], function (err, result) {
     console.log("Record inserted");
   });
 
-  var nftInsert5 =
-    "INSERT INTO nft_list VALUES ('SteelThrone',5,100,?,5,1)";
+  var nftInsert5 = "INSERT INTO nft_list VALUES ('SteelThrone',5,100,?,5,1)";
   con.query(nftInsert5, [privateKey5], function (err, result) {
     console.log("Record inserted");
   });

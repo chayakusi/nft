@@ -29,6 +29,13 @@ export default function BuyNFT() {
   const userEmail = currentUser.email;
   const navigate = useNavigate();
 
+  const loadTraderType = async () => {
+    await axios.post("http://localhost:3001/type", {
+      userEmail: userEmail,
+      convRate: convRate,
+    });
+  };
+
   const loadUser = async () => {
     const response = await axios.get("http://localhost:3001/api/login");
     setUserData(response.data);
@@ -120,9 +127,10 @@ export default function BuyNFT() {
           com_type: com_type,
           login_id: login_id,
           commission: commission,
-          conv_rate: convRate
+          conv_rate: convRate,
         }).then(() => {
           setState({ nft_name: "", nft_id: "", com_type: "" });
+          loadTraderType();
         });
 
         setTimeout(() => {
