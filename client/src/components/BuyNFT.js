@@ -102,7 +102,7 @@ export default function BuyNFT() {
         type: type,
         conv_rate: convRate,
       });
-      setCommission(parseInt(response.data[0].comm, 10));
+      setCommission(Number(response.data[0].comm));
     }
   };
   const handleInput = async (n, p) => {
