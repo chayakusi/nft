@@ -26,6 +26,39 @@ app.get("/api/login", (req, res) => {
   });
 });
 
+app.post("/api/getmtrans", async (req, res) => {
+  const userEmail = req.body.userEmail;
+  const convRate = req.body.convRate;
+
+  var d = new Date();
+  d.setDate(d.getDate() - 30);
+
+  //Get the id of buyer
+  const getLoginID = "SELECT login_id from login WHERE email = ?;";
+  let login_id;
+  login_id = await new Promise((resolve, error) => {
+    db.query(getLoginID, [userEmail], (err, result) => {
+      login_id = result[0].login_id;
+      resolve(login_id);
+    });
+  });
+
+  // Get the value of NFT past 30 days
+  const getTotalTrans =
+    "SELECT sum(price_eth) as sum from nft_list WHERE owner_id = ? and upd_date > ?;";
+  let ttransamount;
+  ttransamount = await new Promise((resolve, error) => {
+    db.query(getTotalTrans, [login_id, d], (err, result) => {
+      ttransamount = result[0].sum;
+      resolve(ttransamount);
+    });
+  });
+
+  ttransamount = ttransamount * convRate;
+
+  res.json(ttransamount);
+});
+
 app.post("/type", async (req, res) => {
   const userEmail = req.body.userEmail;
   const convRate = req.body.convRate;
@@ -42,29 +75,20 @@ app.post("/type", async (req, res) => {
     });
   });
 
-  // Get the total transaction amount in 30 days
-  const totalAmount =
-    "SELECT sum(value) as sum from trans WHERE buyer_id = ? and status = 'Buy' and date > ? and com_type = 'eth';";
+  // Get the value of NFT past 30 days
+  const getTotalTrans =
+    "SELECT sum(price_eth) as sum from nft_list WHERE owner_id = ? and upd_date > ?;";
   let totaltransamount;
   totaltransamount = await new Promise((resolve, error) => {
-    db.query(totalAmount, [login_id, d], (err, result) => {
+    db.query(getTotalTrans, [login_id, d], (err, result) => {
       totaltransamount = result[0].sum;
       resolve(totaltransamount);
     });
   });
 
-  const totalAmount1 =
-    "SELECT sum(value) as sum from trans WHERE buyer_id = ? and status = 'Buy' and date > ? and com_type = 'usd';";
-  let totaltransamount1;
-  totaltransamount1 = await new Promise((resolve, error) => {
-    db.query(totalAmount1, [login_id, d], (err, result) => {
-      totaltransamount1 = result[0].sum;
-      resolve(totaltransamount1);
-    });
-  });
   totaltransamount = totaltransamount * convRate;
-  totaltransamount = totaltransamount + totaltransamount1;
-  if (totaltransamount > 150000) {
+
+  if (totaltransamount > 100000) {
     //Update type
     const updateOwner = "UPDATE login SET type = 'GOLD' WHERE login_id = ?;";
     db.query(updateOwner, [login_id], (err, result) => {
@@ -138,7 +162,6 @@ app.post("/cancel", (req, res) => {
       const updateBal =
         "UPDATE login SET bal_usd = bal_usd + ? WHERE login_id = ?;";
       db.query(updateBal, [value + com_paid, buyer_id], (err, result) => {
-        console.log(result);
         console.log(err);
       });
     } else {
@@ -397,6 +420,7 @@ app.post("/nft/buy", async (req, res) => {
   const login_id = req.body.login_id;
   const commission = req.body.commission;
   const conv_rate = req.body.conv_rate;
+  var d = new Date();
   let amount;
 
   //Get the ETH price of NFT
@@ -445,6 +469,12 @@ app.post("/nft/buy", async (req, res) => {
   //Update the owner of NFT
   const updateOwner = "UPDATE nft_list SET owner_id = ? WHERE (token_id = ?);";
   db.query(updateOwner, [login_id, nft_id], (err, result) => {
+    console.log(err);
+  });
+
+  //Update the NFT Update date
+  const updateDate = "UPDATE nft_list SET upd_date = ? WHERE (token_id = ?);";
+  db.query(updateDate, [d, nft_id], (err, result) => {
     console.log(err);
   });
 

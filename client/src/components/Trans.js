@@ -29,7 +29,7 @@ export default function Trans() {
   }, []);
   useEffect(() => {
     loadTrans();
-  }, []);
+  });
 
   const handleCancel = async (
     trans_id,
@@ -41,7 +41,6 @@ export default function Trans() {
     value,
     status
   ) => {
-    console.log("nahdlecancel");
     let filtered = transData.filter((data) => data.trans_id !== trans_id);
     setTransData(filtered);
     await axios.post("http://localhost:3001/cancel", {

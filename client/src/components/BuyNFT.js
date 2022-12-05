@@ -29,8 +29,8 @@ export default function BuyNFT() {
   const userEmail = currentUser.email;
   const navigate = useNavigate();
 
-  const loadTraderType = async () => {
-    await axios.post("http://localhost:3001/type", {
+  const loadTraderType = () => {
+    axios.post("http://localhost:3001/type", {
       userEmail: userEmail,
       convRate: convRate,
     });
@@ -80,6 +80,7 @@ export default function BuyNFT() {
   };
   const handleCheck = async (e) => {
     e.preventDefault();
+
     let valid = false;
     NFTdata.forEach((item, index) => {
       if (item.name === nft_name && item.token_id === nft_id) {
@@ -104,8 +105,17 @@ export default function BuyNFT() {
       setCommission(parseInt(response.data[0].comm, 10));
     }
   };
+  const handleInput = async (n, p) => {
+    var input1 = document.getElementById("nft_name");
+    input1.value = n;
+    var input2 = document.getElementById("nft_id");
+    input2.value = p;
+
+    setState({ nft_name: n, nft_id: p, com_type: "" });
+  };
   const handleBuy = (e) => {
     e.preventDefault();
+
     let valid = false;
     NFTdata.forEach((item, index) => {
       if (item.name === nft_name && item.token_id === nft_id) {
@@ -130,9 +140,9 @@ export default function BuyNFT() {
           conv_rate: convRate,
         }).then(() => {
           setState({ nft_name: "", nft_id: "", com_type: "" });
-          loadTraderType();
         });
 
+        loadTraderType();
         setTimeout(() => {
           navigate("/dashboard");
         }, 500);
@@ -161,8 +171,8 @@ export default function BuyNFT() {
                 <tr>
                   <th>Name</th>
                   <th>Token ID</th>
-
                   <th>Price(ETH)</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -171,8 +181,16 @@ export default function BuyNFT() {
                     <tr>
                       <td>{item.name}</td>
                       <td>{item.token_id}</td>
-
                       <td>{item.price_eth}</td>
+                      <td>
+                        <Button
+                          onClick={() => {
+                            handleInput(item.name, item.token_id);
+                          }}
+                        >
+                          Select
+                        </Button>
+                      </td>
                     </tr>
                   );
                 })}

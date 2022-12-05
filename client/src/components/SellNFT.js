@@ -34,9 +34,17 @@ export default function SellNFT() {
     const { name, value } = e.target;
     setState({ ...state, [name]: value });
   };
+  const handleInput = async (n, p) => {
+    var input1 = document.getElementById("sellname");
+    input1.value = n;
+    var input2 = document.getElementById("sellid");
+    input2.value = p;
+    setState({ sellname: n, sellid: p });
+  };
 
   const handleSell = (e) => {
     e.preventDefault();
+
     let valid = false;
     NFTdata.forEach((item, index) => {
       if (item.name === sellname && item.token_id === sellid) valid = true;
@@ -44,7 +52,6 @@ export default function SellNFT() {
     if (!sellname || !sellid || !valid) {
       alert("Check your values");
     } else {
-      console.log(sellid, sellname);
       Axios.post("http://localhost:3001/nft/sell", {
         sellname: sellname,
         sellid: sellid,
@@ -80,18 +87,26 @@ export default function SellNFT() {
                 <tr>
                   <th>Name</th>
                   <th>Token ID</th>
-
                   <th>Price(ETH)</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {NFTdata.map((item, index) => {
                   return (
-                    <tr>
+                    <tr key={item.token_id}>
                       <td>{item.name}</td>
                       <td>{item.token_id}</td>
-
                       <td>{item.price_eth}</td>
+                      <td>
+                        <Button
+                          onClick={() => {
+                            handleInput(item.name, item.token_id);
+                          }}
+                        >
+                          Select
+                        </Button>
+                      </td>
                     </tr>
                   );
                 })}

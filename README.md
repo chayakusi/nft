@@ -7,11 +7,11 @@ Instructions:
 3. Exceute following commands in the terminal.
    cd server
    node schema.js
-   npm run devStart
-4. Make a new terminal window
-5. Exceute following commands in the new terminal.
-   cd client
-   npm start
+4. Close all terminals
+5. Make a new split terminal window.
+6. Exceute following commands in the 2 new terminals.
+   Terminal 1: cd client;npm start
+   Terminal 2: cd server;npm run devStart
 
 About this Project:
 
@@ -25,8 +25,3 @@ About this Project:
 8. Every manager has some mancode in the login table. Only those users can go to Manager dashboard.
 9. Manager can see all the users transactions and can add more NFTs and can filter out the date for the transactions
 10. In NFT Table: is_avl is the NFT that are available(1-> available, 0-> not available).
-
-BUGS
-
-1. Even if the balance is insufficient, the trader will get success alert even though the transaction will not happen.
-2. Have to execute cancel transactions functionality.

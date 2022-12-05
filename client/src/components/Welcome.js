@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { AiOutlineReload } from "react-icons/ai";
 // import Slider from './Slider';
 import "../css/Welcome.css";
 import { Link } from "react-router-dom";
@@ -14,7 +15,8 @@ export default function Welcome() {
   const { currentUser } = useAuth();
   const [NFTdata, setNFTData] = useState([]);
   const [userLogin, setUserLogin] = useState([]);
-
+  const [monthlytransvalue, setMonthlyTransValue] = useState(0);
+  const [convRate, setConvRate] = useState(0);
   const [loginData, setLoginData] = useState([]);
   const [username, setUserName] = useState("");
   const [type, setType] = useState("");
@@ -43,18 +45,38 @@ export default function Welcome() {
     });
     setUserLogin(response.data);
   };
+  const getConvRate = async () => {
+    const response = await axios.get(
+      "https://api.coinbase.com/v2/prices/BTC-USD/buy"
+    );
+    setConvRate(parseInt(response.data.data.amount, 10));
+  };
 
+  const loadMonthlyTrans = async () => {
+    const response = await axios.post("http://localhost:3001/api/getmtrans", {
+      userEmail: userEmail,
+      convRate: convRate,
+    });
+
+    setMonthlyTransValue(response.data);
+  };
+  useEffect(() => {
+    loadMonthlyTrans();
+  });
+  useEffect(() => {
+    loadNFT();
+  });
   useEffect(() => {
     loadLogin();
   });
 
   useEffect(() => {
-    loadNFT();
-  });
-
-  useEffect(() => {
     loadBalance();
   });
+  useEffect(() => {
+    loadNFT();
+    getConvRate();
+  }, []);
 
   return (
     <>
@@ -63,7 +85,16 @@ export default function Welcome() {
         style={{ padding: "20px", color: "white", fontFamily: "cursive" }}
       >
         <div className="d-flex">
-          <h1>Welcome,&nbsp;</h1>
+          <h1>
+            <button style={{ backgroundColor: "transparent", color: "white" }}>
+              <AiOutlineReload
+                onClick={() => {
+                  window.location.reload(false);
+                }}
+              />
+            </button>
+            &nbsp; Welcome,&nbsp;
+          </h1>
           <h1 style={{ textTransform: "uppercase" }}>
             {username}&nbsp;
             <sup
@@ -112,6 +143,7 @@ export default function Welcome() {
                 return <>{item.bal_eth === null || 0 ? 0 : item.bal_eth}</>;
               })}
             </div>
+
             <div
               style={{ marginTop: "30px" }}
               className="d-flex justify-content-around align-items-center"
@@ -136,6 +168,9 @@ export default function Welcome() {
                 Buy ETH
               </Button>
             </div>
+          </div>
+          <div style={{ marginTop: "40px" }}>
+            <h2>Your Monthly Tranactions: {monthlytransvalue}</h2>
           </div>
         </div>
 
