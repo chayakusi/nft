@@ -29,7 +29,7 @@ function Modal1({ setOpenModal }) {
     };
 
     getConvRate();
-  }, []);
+  });
   useEffect(() => {
     loadUserData();
   });

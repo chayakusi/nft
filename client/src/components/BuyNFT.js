@@ -142,8 +142,8 @@ export default function BuyNFT() {
           setState({ nft_name: "", nft_id: "", com_type: "" });
         });
 
-        loadTraderType();
         setTimeout(() => {
+          loadTraderType();
           navigate("/dashboard");
         }, 500);
       }

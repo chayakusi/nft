@@ -170,7 +170,7 @@ export default function Welcome() {
             </div>
           </div>
           <div style={{ marginTop: "40px" }}>
-            <h2>Your Monthly Tranactions: {monthlytransvalue}</h2>
+            <h2>Your Monthly Tranactions: ${monthlytransvalue}</h2>
           </div>
         </div>
 
