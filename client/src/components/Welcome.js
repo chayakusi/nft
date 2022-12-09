@@ -51,6 +51,15 @@ export default function Welcome() {
     );
     setConvRate(parseInt(response.data.data.amount, 10));
   };
+  const loadTraderType = () => {
+    axios.post("http://localhost:3001/type", {
+      userEmail: userEmail,
+      convRate: convRate,
+    });
+  };
+  useEffect(() => {
+    loadTraderType();
+  }, [monthlytransvalue]);
 
   const loadMonthlyTrans = async () => {
     const response = await axios.post("http://localhost:3001/api/getmtrans", {

@@ -29,12 +29,12 @@ export default function BuyNFT() {
   const userEmail = currentUser.email;
   const navigate = useNavigate();
 
-  const loadTraderType = () => {
-    axios.post("http://localhost:3001/type", {
-      userEmail: userEmail,
-      convRate: convRate,
-    });
-  };
+  // const loadTraderType = () => {
+  //   axios.post("http://localhost:3001/type", {
+  //     userEmail: userEmail,
+  //     convRate: convRate,
+  //   });
+  // };
 
   const loadUser = async () => {
     const response = await axios.get("http://localhost:3001/api/login");
@@ -143,7 +143,7 @@ export default function BuyNFT() {
         });
 
         setTimeout(() => {
-          loadTraderType();
+          // loadTraderType();
           navigate("/dashboard");
         }, 500);
       }
